@@ -1,6 +1,8 @@
 # librerias locales
 import trackSeparator
-import pitchExtractor
+from instruments.common import pitchExtractor
+from instruments.specific import guitar
+from instruments.specific import drums
 import musicDownloader
 
 # FastAPI
@@ -13,17 +15,34 @@ app = FastAPI()
 
 
 # Instancia del separador de canciones
-
 @app.post("/wn/download")
 async def downloadMusicEndpoint():
     # TODO
     pass
 
 
+@app.post("/wn/drums")
+async def pitchEndpoint(request: Request):
+    response = await drums.extract_drums(request)
+    return response
+
+
+@app.post("/wn/bass")
+async def pitchEndpoint(request: Request):
+    response = await pitchExtractor.extract_pitch(request)
+    return response
+
+
+@app.post("/wn/guitar")
+async def pitchEndpoint(request: Request):
+    response = await guitar.extract_chords(request)
+    return response
+
 @app.post("/wn/pitch")
 async def pitchEndpoint(request: Request):
     response = await pitchExtractor.extract_pitch(request)
     return response
+
 
 @app.post("/wn/separator")
 async def separateEndpoint(request: Request):
