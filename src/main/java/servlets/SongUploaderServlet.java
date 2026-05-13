@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/startup")
+@WebServlet("/separator")
 @MultipartConfig
 public class SongUploaderServlet extends HttpServlet{
     /*
@@ -97,6 +97,6 @@ public class SongUploaderServlet extends HttpServlet{
 
         req.getSession().setAttribute("processedAudio", audioListOutput);
 
-        resp.sendRedirect(req.getContextPath() + "/index.jsp");
+        resp.sendRedirect(req.getContextPath() + "/createPractice.jsp");
     }
 }

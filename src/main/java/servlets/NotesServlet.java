@@ -38,12 +38,39 @@ public class NotesServlet extends HttpServlet {
             System.out.println("-- (Notes) Enviando " + audioToProcess.length + " bytes a Python...");
 
             try {
+                // String[] separated = trackName.split("\\.");
+                // System.out.println(separated.length);
+                // for (int i = 0; i< separated.length; i++)
+                // {
+                //     System.out.println(separated[i]);
+                // }
+                String track = trackName.split("\\.")[0];
+                URI uri;
+                
+                switch (track) {
+                    case "drums":
+                        uri = new URI("http://127.0.0.1:8000/wn/drums");
+                        break;
+                    case "bass":
+                        uri = new URI("http://127.0.0.1:8000/wn/bass");
+                        break;
+                    case "vocals":
+                        uri = new URI("http://127.0.0.1:8000/wn/pitch");
+                        break;
+                    case "other":
+                        uri = new URI("http://127.0.0.1:8000/wn/guitar");
+                        break;
+                    default:
+                        uri = new URI("http://127.0.0.1:8000/wn/pitch");
+                }
+
+
                 HttpClient client = HttpClient.newBuilder()
                     .version(HttpClient.Version.HTTP_1_1)
                     .build();
                 
                 HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://127.0.0.1:8000/wn/pitch"))
+                    .uri(uri)
                     .header("Content-Type", "audio/mpeg")
                     .POST(HttpRequest.BodyPublishers.ofByteArray(audioToProcess))
                     .build();
