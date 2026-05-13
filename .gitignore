@@ -37,3 +37,16 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Otros ### 
+/node_modules
+*.mp3
+.idea/encodings.xml
+.gitignore
+.idea
+/musicApp/__pycache__/
+/musicApp/instruments/common/__pycache__/
+/musicApp/instruments/specific/__pycache__/
+
+### Env ###
+src/main/webapp/.env
