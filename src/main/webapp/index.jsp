@@ -7,7 +7,7 @@
     <body>
     <h2>WaveNotes</h2>
 
-    <form action="/WaveNotes/startup" method="POST" enctype="multipart/form-data">
+    <form action="/WaveNotes/separator" method="POST" enctype="multipart/form-data">
         <input type="file" id="usersSong" name="audio" accept=".mp3, .wav">
         <input type="submit" value="Separar Pistas">
     </form>
