@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -18,6 +19,21 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        System.out.println("-- (Login) Estableciendo variables de sesion");
+        
+        req.setCharacterEncoding("UTF-8");
+        
+        String uid = req.getParameter("uid");
+        String email = req.getParameter("email");
+        String name = req.getParameter("name");
+        
+        HttpSession session = req.getSession();
 
+        session.setAttribute("userLoggedIn", true);
+        session.setAttribute("uid", uid); 
+        session.setAttribute("userName", name);
+        session.setAttribute("userEmail", email);
+
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

@@ -5,6 +5,8 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 -->
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<% boolean isLoggedIn = session.getAttribute("userLoggedIn") != null; %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,15 +28,30 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         <div style="display: flex; align-items: center; gap: 32px;">
             <span class="heading-lg text-gradient-brand" style="font-size: 24px;">WaveNotes</span>
             <div class="hidden-mobile" style="display: flex; gap: var(--spacing-md);">
-                <a class="nav-link" href="login.jsp">Inicio</a>
-                <a class="nav-link" href="login.jsp">Prácticas</a>
-                <a class="nav-link" href="login.jsp">Estadísticas</a>
-                <a class="nav-link" href="login.jsp">Canciones</a>
+                <a class="nav-link" href="welcome.jsp">Inicio</a>
+                <% if(!isLoggedIn) { %>
+                    <a class="nav-link" href="login.jsp?redirect=myPractices.jsp">Prácticas</a>
+                    <a class="nav-link" href="login.jsp?redirect=myStats.jsp">Estadísticas</a>
+                    <a class="nav-link" href="login.jsp?redirect=mySongs.jsp">Canciones</a>
+                <% } else{%>
+                    <a class="nav-link" href="myPractices.jsp">Prácticas</a>
+                    <a class="nav-link" href="myStats.jsp">Estadísticas</a>
+                    <a class="nav-link" href="mySongs.jsp">Canciones</a>
+                <%} %>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 16px;">
-            <a href="login.jsp" class="btn" style="width: auto; background: transparent;">Login</a>
-            <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
+            <% if(!isLoggedIn) { %>
+                <a href="login.jsp" class="btn" style="width: auto; background: transparent;">Login</a>
+            <% } else{%>
+                <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span>
+            <%} %>
+
+            <% if(!isLoggedIn) { %>
+                    <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
+                <% } else{%>
+                    <a href="createPractice.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
+                <%} %>
         </div>
     </nav>
 
@@ -64,7 +81,11 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 </p>
                 
                 <div class="btn-group">
-                    <a href="login.jsp" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
+                    <% if(!isLoggedIn) { %>
+                        <a href="login.jsp" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
+                    <% } else{%>
+                        <a href="createPractice.jsp" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
+                    <%} %>
                     <a href="createPractice.jsp" class="btn btn-outline btn-large glass-panel" style="width: auto;">Iniciar Demo</a>
                 </div>
                 </div>
@@ -122,7 +143,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 <div class="blob-primary" style="position: absolute; top: -50px; right: -50px; width: 250px; height: 250px;"></div>
                 <h2 class="heading-xl" style="margin-bottom: var(--spacing-md); position: relative; z-index: 2;">¿Listo para convertirte en el mejor músico?</h2>
                 <p class="text-muted" style="font-size: 18px; margin-bottom: var(--spacing-lg); position: relative; z-index: 2;">Únete a nuestra creciente comunidad de músicos superándose con cada práctica.</p>
-                <a href="login.jsp" class="btn btn-white btn-large" style="display: inline-flex; width: auto; position: relative; z-index: 2;">Obtén WaveNotes Pro</a>
+                <a class="btn btn-white btn-large" style="display: inline-flex; width: auto; position: relative; z-index: 2;">Obtén WaveNotes Pro</a>
             </div>
         </section>
     </main>
@@ -133,8 +154,8 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 <span class="heading-lg" style="font-size: 18px; margin-bottom: 8px;">Con cariño: Creador de WaveNotes.</span>
             </div>
             <div class="footer-links">
-                <a class="text-small text-muted" href="#">Privacidad</a>
-                <a class="text-small text-muted" href="#">Términos y Condiciones</a>
+                <a class="text-small text-muted">Privacidad</a>
+                <a class="text-small text-muted">Términos y Condiciones</a>
             </div>
         </div>
     </footer>

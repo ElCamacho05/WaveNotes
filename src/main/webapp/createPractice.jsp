@@ -9,6 +9,9 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
     // Bandera de Java para saber si la sesión ya tiene las pistas en la RAM [cite: 35]
     boolean pistasListas = session.getAttribute("pistasGeneradas") != null; 
 %>
+<% boolean isLoggedIn = session.getAttribute("userLoggedIn") != null; %>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +42,11 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 16px;">
-            <a href="login.jsp" class="btn" style="width: auto; background: transparent;">Login</a>
+            <% if(!isLoggedIn) { %>
+                <a href="login.jsp" class="btn" style="width: auto; background: transparent;">Login</a>
+            <% } else{%>
+                <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span>
+            <%} %>
             <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
         </div>
     </nav>
@@ -112,7 +119,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 
         </div>
 
-        <form action="<%=request.getContextPath()%>/startPractice" method="POST" style="grid-column: span 4; display: flex; flex-direction: column; gap: var(--spacing-md); height: 100%;">
+        <form action="<%=request.getContextPath()%>/startup" method="POST" style="grid-column: span 4; display: flex; flex-direction: column; gap: var(--spacing-md); height: 100%;">
             
             <div id="panelConfig" class="glass-panel disabled-panel" style="padding: var(--spacing-md);">
                 <h4 class="heading-lg" style="font-size: 20px; margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-base);">
