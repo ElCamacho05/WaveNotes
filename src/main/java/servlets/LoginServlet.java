@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        System.out.println("-- (Login) Estableciendo variables de sesion");
+        System.out.println("-- (Login) Parametros de sesion");
         
         req.setCharacterEncoding("UTF-8");
         
@@ -34,6 +34,7 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("userName", name);
         session.setAttribute("userEmail", email);
 
+        System.out.println("// (Login) Parametros de sesion iniciados correctamente");
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

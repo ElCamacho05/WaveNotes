@@ -36,9 +36,16 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         <div style="display: flex; align-items: center; gap: 32px;">
             <span class="heading-lg text-gradient-brand" style="font-size: 24px;">WaveNotes</span>
             <div class="hidden-mobile" style="display: flex; gap: var(--spacing-md);">
-                <a class="nav-link" href="login.jsp">Inicio</a>
-                <a class="nav-link" href="login.jsp">Bienvenida</a>
-                <a class="nav-link" href="login.jsp">Ayuda</a>
+                <a class="nav-link" href="welcome.jsp">Inicio</a>
+                <% if(!isLoggedIn) { %>
+                    <a class="nav-link" href="login.jsp?redirect=myPractices.jsp">Prácticas</a>
+                    <a class="nav-link" href="login.jsp?redirect=myStats.jsp">Estadísticas</a>
+                    <a class="nav-link" href="login.jsp?redirect=mySongs.jsp">Canciones</a>
+                <% } else{%>
+                    <a class="nav-link" href="myPractices.jsp">Prácticas</a>
+                    <a class="nav-link" href="myStats.jsp">Estadísticas</a>
+                    <a class="nav-link" href="mySongs.jsp">Canciones</a>
+                <%} %>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 16px;">
@@ -47,7 +54,12 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             <% } else{%>
                 <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span>
             <%} %>
-            <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
+
+            <% if(!isLoggedIn) { %>
+                    <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
+                <% } else{%>
+                    <a href="createPractice.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
+                <%} %>
         </div>
     </nav>
 
@@ -74,9 +86,17 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             <button class="side-nav-btn">
                 <span class="material-symbols-outlined">help</span> Soporte
             </button>
-            <button class="side-nav-btn">
-                <span class="material-symbols-outlined">logout</span> Salir
-            </button>
+
+            <% if(!isLoggedIn) { %>
+                <button class="side-nav-btn">
+                    <span href="login.jsp" class="material-symbols-outlined">login</span> Login
+                </button>
+            <% } else{%>
+                <button id="btn-logout" name="" class="side-nav-btn">
+                    <span class="material-symbols-outlined">logout</span> LogOut
+                </button>
+            <%} %>
+            
         </div>
     </aside>
 
@@ -182,8 +202,11 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             </div>
         </div>
     </footer>
+    
+    <script type="module" src="<%=request.getContextPath()%>/loginModule.js"></script>
 
     <script>
+
         const finishedTracks = document.body.getAttribute('data-pistas') === 'true';
         
         document.addEventListener("DOMContentLoaded", () => {
