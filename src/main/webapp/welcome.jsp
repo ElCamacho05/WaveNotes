@@ -24,36 +24,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="top-nav" style="justify-content: space-between; padding: 0 32px;">
-        <div style="display: flex; align-items: center; gap: 32px;">
-            <span class="heading-lg text-gradient-brand" style="font-size: 24px;">WaveNotes</span>
-            <div class="hidden-mobile" style="display: flex; gap: var(--spacing-md);">
-                <a class="nav-link" href="welcome.jsp">Inicio</a>
-                <% if(!isLoggedIn) { %>
-                    <a class="nav-link" href="login.jsp?redirect=myPractices.jsp">Prácticas</a>
-                    <a class="nav-link" href="login.jsp?redirect=myStats.jsp">Estadísticas</a>
-                    <a class="nav-link" href="login.jsp?redirect=mySongs.jsp">Canciones</a>
-                <% } else{%>
-                    <a class="nav-link" href="myPractices.jsp">Prácticas</a>
-                    <a class="nav-link" href="myStats.jsp">Estadísticas</a>
-                    <a class="nav-link" href="mySongs.jsp">Canciones</a>
-                <%} %>
-            </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 16px;">
-            <% if(!isLoggedIn) { %>
-                <a href="login.jsp" class="btn" style="width: auto; background: transparent;">Login</a>
-            <% } else{%>
-                <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span>
-            <%} %>
-
-            <% if(!isLoggedIn) { %>
-                    <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
-                <% } else{%>
-                    <a href="createPractice.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
-                <%} %>
-        </div>
-    </nav>
+    <%@ include file="includes/header.jsp" %>
 
     <main style="padding-top: 64px;">
         <section class="hero-container">
@@ -147,16 +118,6 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         </section>
     </main>
 
-    <footer class="site-footer" style="background: #0a0a0b;">
-        <div class="footer-content" style="align-items: flex-start;">
-            <div style="display: flex; flex-direction: column;">
-                <span class="heading-lg" style="font-size: 18px; margin-bottom: 8px;">Con cariño: Creador de WaveNotes.</span>
-            </div>
-            <div class="footer-links">
-                <a class="text-small text-muted">Privacidad</a>
-                <a class="text-small text-muted">Términos y Condiciones</a>
-            </div>
-        </div>
-    </footer>
+    <%@ include file="includes/footer.jsp" %>
 </body>
 </html>

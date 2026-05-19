@@ -32,73 +32,9 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 </head>
 
 <body data-pistas="<%= pistasListas %>">
-    <nav class="top-nav" style="justify-content: space-between; padding: 0 32px;">
-        <div style="display: flex; align-items: center; gap: 32px;">
-            <span class="heading-lg text-gradient-brand" style="font-size: 24px;">WaveNotes</span>
-            <div class="hidden-mobile" style="display: flex; gap: var(--spacing-md);">
-                <a class="nav-link" href="welcome.jsp">Inicio</a>
-                <% if(!isLoggedIn) { %>
-                    <a class="nav-link" href="login.jsp?redirect=myPractices.jsp">Prácticas</a>
-                    <a class="nav-link" href="login.jsp?redirect=myStats.jsp">Estadísticas</a>
-                    <a class="nav-link" href="login.jsp?redirect=mySongs.jsp">Canciones</a>
-                <% } else{%>
-                    <a class="nav-link" href="myPractices.jsp">Prácticas</a>
-                    <a class="nav-link" href="myStats.jsp">Estadísticas</a>
-                    <a class="nav-link" href="mySongs.jsp">Canciones</a>
-                <%} %>
-            </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 16px;">
-            <% if(!isLoggedIn) { %>
-                <a href="login.jsp" class="btn" style="width: auto; background: transparent;">Login</a>
-            <% } else{%>
-                <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span>
-            <%} %>
+    <%@ include file="includes/header.jsp" %>
 
-            <% if(!isLoggedIn) { %>
-                    <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
-                <% } else{%>
-                    <a href="createPractice.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
-                <%} %>
-        </div>
-    </nav>
-
-    <aside class="side-nav">
-        <div style="display: flex; flex-direction: column; gap: var(--spacing-base); flex-grow: 1;">
-            <button class="side-nav-btn active">
-                <span class="material-symbols-outlined">home</span> Inicio
-            </button>
-            <button class="side-nav-btn">
-                <span class="material-symbols-outlined">book</span> Practicas
-            </button>
-            <button class="side-nav-btn">
-                <span class="material-symbols-outlined">bar_chart_4_bars</span> Estadísticas
-            </button>
-            <button class="side-nav-btn">
-                <span class="material-symbols-outlined">music_note</span> Canciones
-            </button>
-            <button class="side-nav-btn">
-                <span class="material-symbols-outlined">settings</span> Ajustes
-            </button>
-        </div>
-        
-        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: var(--spacing-base); display: flex; flex-direction: column; gap: var(--spacing-base);">
-            <button class="side-nav-btn">
-                <span class="material-symbols-outlined">help</span> Soporte
-            </button>
-
-            <% if(!isLoggedIn) { %>
-                <button class="side-nav-btn">
-                    <span href="login.jsp" class="material-symbols-outlined">login</span> Login
-                </button>
-            <% } else{%>
-                <button id="btn-logout" name="" class="side-nav-btn">
-                    <span class="material-symbols-outlined">logout</span> LogOut
-                </button>
-            <%} %>
-            
-        </div>
-    </aside>
+    <%@ include file="includes/sideNavigation.jsp" %>
 
     <main class="main-layout app-content">
         <div class="text-center" style="grid-column: 1 / -1; margin-bottom: var(--spacing-md);">
@@ -198,17 +134,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         </form>
     </main>
 
-    <footer class="site-footer" style="background: #0a0a0b;">
-        <div class="footer-content" style="align-items: flex-start;">
-            <div style="display: flex; flex-direction: column;">
-                <span class="heading-lg" style="font-size: 18px; margin-bottom: 8px;">Con cariño: Creador de WaveNotes.</span>
-            </div>
-            <div class="footer-links">
-                <a class="text-small text-muted" href="#">Privacidad</a>
-                <a class="text-small text-muted" href="#">Términos y Condiciones</a>
-            </div>
-        </div>
-    </footer>
+    <%@ include file="includes/footer.jsp" %>
     
     <script type="module" src="<%=request.getContextPath()%>/loginModule.js"></script>
 
