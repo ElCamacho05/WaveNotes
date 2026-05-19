@@ -27,7 +27,7 @@ public class NotesServlet extends HttpServlet {
         String trackName = req.getParameter("selectedSong");
         
         // Recuperacion de las pistas enviadas como atributos anteriormente
-        Map<String, byte[]> inMemTracks = (Map<String, byte[]>) req.getSession().getAttribute("pistasGeneradas");
+        Map<String, byte[]> inMemTracks = (Map<String, byte[]>) req.getSession().getAttribute("generatedTracks");
 
         if (inMemTracks != null && inMemTracks.containsKey(trackName)) {
             

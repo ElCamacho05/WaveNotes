@@ -83,7 +83,7 @@ public class SongUploaderServlet extends HttpServlet{
                 zis.close();
 
                 // Guardado de pistas para la sesion de usuario
-                req.getSession().setAttribute("pistasGeneradas", inMemTracks);
+                req.getSession().setAttribute("generatedTracks", inMemTracks);
                 System.out.println("// (SongUploader) Pistas listas para reproduccion.");
             }
         } catch (Exception e) {

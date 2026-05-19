@@ -23,7 +23,7 @@ public class AudioStreamServlet extends HttpServlet {
         String trackName = req.getParameter("track");
         
         // Recuperacion de las pistas generadas anteriormente
-        Map<String, byte[]> tracks = (Map<String, byte[]>) req.getSession().getAttribute("pistasGeneradas");
+        Map<String, byte[]> tracks = (Map<String, byte[]>) req.getSession().getAttribute("generatedTracks");
 
         if (tracks != null && tracks.containsKey(trackName)) {
             byte[] audioData = tracks.get(trackName);
