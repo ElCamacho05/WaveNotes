@@ -315,7 +315,6 @@ a {
 @media (max-width: 768px) {
     .footer-content { flex-direction: column; gap: var(--spacing-md); text-align: center; }
 }
-
 /* =========================================
    6. NAVEGACIÓN Y LAYOUT DE APLICACIÓN
    ========================================= */
@@ -341,11 +340,11 @@ a {
     left: 0;
     top: 0;
     height: 100%;
-    width: 256px; /* 64 Tailwind units */
+    width: 256px; 
     display: flex;
     flex-direction: column;
     padding: var(--spacing-sm);
-    padding-bottom: 140px;
+    padding-bottom: var(--spacing-md); 
     background: rgba(10, 10, 11, 0.8);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
@@ -405,15 +404,27 @@ a {
     padding-bottom: 80px;
 }
 
+/* CONTROL DE LAYOUT GLOBAL*/
+
+/* Pantallas grandes (Escritorio) */
 @media (min-width: 768px) {
-    .app-content { margin-left: 256px; }
-    .top-nav { padding-left: calc(256px + var(--spacing-md)); }
-    .site-footer { margin-left: 0; }
+    .app-content { 
+        margin-left: 256px; 
+    }
+    .top-nav { 
+        padding-left: calc(256px + var(--spacing-md)); 
+    }
+    .site-footer { 
+        margin-left: 256px;
+        width: calc(100% - 256px);
+        z-index: 30;
+    }
 }
 
+/* Pantallas pequeñas/ dispositivos moviles*/
 @media (max-width: 767px) {
     .side-nav {
-        display: none;
+        display: none; /* Oculta la barra lateral en moviles */
     }
 }
 
@@ -743,4 +754,189 @@ a {
     text-align: center;
     position: relative;
     overflow: hidden;
+}
+
+/* =========================================
+   11. TARJETAS DE PRÁCTICA (myPractices.jsp)
+   ========================================= */
+
+/* Grid Responsivo */
+.practice-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+@media (min-width: 640px) { .practice-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .practice-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1536px) { .practice-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* Tarjeta Individual */
+.practice-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.practice-card:hover {
+    border-color: rgba(0, 209, 255, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px -10px rgba(0, 209, 255, 0.15);
+}
+
+/* Imagen y Overlay */
+.card-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease;
+}
+
+.practice-card:hover .card-image {
+    transform: scale(1.1);
+}
+
+.card-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+.card-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(0, 209, 255, 0.9);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.card-play-btn {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Meta y Estadísticas */
+.card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.stat-box {
+    background: rgba(14, 14, 15, 0.5);
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+/* Nueva Práctica (Placeholder) */
+.new-practice-card {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--outline);
+    cursor: pointer;
+    transition: all 0.3s;
+    min-height: 280px;
+}
+
+.new-practice-card:hover {
+    border-color: var(--primary-container);
+    color: var(--primary-container);
+    background: rgba(0, 209, 255, 0.05);
+}
+
+/* Efectos visuales */
+.wave-gradient {
+    background: linear-gradient(90deg, #00d1ff 0%, #7701d0 100%);
+}
+
+.progress-container-small {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 99px;
+}
+
+/* Botones Superiores */
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--surface-container-high);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--on-surface-variant);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-container);
+    color: var(--on-surface);
+}
+
+.heading-md {
+    font-family: var(--font-headline);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

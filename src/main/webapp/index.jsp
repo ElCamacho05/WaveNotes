@@ -13,7 +13,7 @@
     </form>
 
     <!-- Condicion para que las pistas solo se pongan una vez generadas -->
-    <% if (session.getAttribute("pistasGeneradas") != null) { %>
+    <% if (session.getAttribute("generatedTracks") != null) { %>
         <hr>
         <h3>Tus Pistas Listas:</h3>
         

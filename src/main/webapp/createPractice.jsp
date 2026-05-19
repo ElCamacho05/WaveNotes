@@ -7,7 +7,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <% 
     // Bandera de Java para saber si la sesión ya tiene las pistas en la RAM [cite: 35]
-    boolean pistasListas = session.getAttribute("pistasGeneradas") != null; 
+    boolean pistasListas = session.getAttribute("generatedTracks") != null; 
 %>
 <% boolean isLoggedIn = session.getAttribute("userLoggedIn") != null; %>
 
@@ -147,10 +147,17 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 </h4>
                 
                 <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
-                    
                     <div style="padding: var(--spacing-sm); background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 8px;">
                         <label class="text-small text-muted" style="display: block; margin-bottom: var(--spacing-sm);">Instrumento Deseado</label>
                         <div class="radio-group">
+
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label class="radio-label">
+                                    Título de la práctica:
+                                    <input type="text" name="titlePractice">
+                                </label>
+                            </div>
+
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label class="radio-label">
                                     <input type="radio" name="selectedSong" value="other.mp3" checked> Guitarra
@@ -191,7 +198,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         </form>
     </main>
 
-    <footer class="site-footer" style="background: #0a0a0b; margin-top: 0;">
+    <footer class="site-footer" style="background: #0a0a0b;">
         <div class="footer-content" style="align-items: flex-start;">
             <div style="display: flex; flex-direction: column;">
                 <span class="heading-lg" style="font-size: 18px; margin-bottom: 8px;">Con cariño: Creador de WaveNotes.</span>

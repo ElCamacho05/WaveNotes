@@ -86,7 +86,6 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                     <% } else{%>
                         <a href="createPractice.jsp" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
                     <%} %>
-                    <a href="createPractice.jsp" class="btn btn-outline btn-large glass-panel" style="width: auto;">Iniciar Demo</a>
                 </div>
                 </div>
         </section>
@@ -148,7 +147,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         </section>
     </main>
 
-    <footer class="site-footer" style="background: #0a0a0b; margin-top: 0;">
+    <footer class="site-footer" style="background: #0a0a0b;">
         <div class="footer-content" style="align-items: flex-start;">
             <div style="display: flex; flex-direction: column;">
                 <span class="heading-lg" style="font-size: 18px; margin-bottom: 8px;">Con cariño: Creador de WaveNotes.</span>
