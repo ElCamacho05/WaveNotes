@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<nav class="top-nav" style="justify-content: space-between; padding: 0 32px;">
+<body>
+    <nav class="top-nav" style="justify-content: space-between; padding: 0 32px;">
     <div style="display: flex; align-items: center; gap: 32px;">
         <span class="heading-lg text-gradient-brand" style="font-size: 24px;">WaveNotes</span>
         <div class="hidden-mobile" style="display: flex; gap: var(--spacing-md);">
@@ -37,10 +38,12 @@
         <% if(!isLoggedIn) { %>
             <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Login</a>
         <% } else{%>
-            <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span>
+            <!-- <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span> -->
+            <span class="text-muted" style="margin-right: 8px;">Hola, ${user.nameUser}</span>
         <%} %>
 
         <a href="createPractice.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
     </div>
 </nav>
+</body>
 </html>
