@@ -2,13 +2,13 @@ package model;
 
 import java.io.Serializable;
 
-public class AudioModel implements Serializable {
+public class SongModel implements Serializable {
     private String audioIDAudio;
     private String urlAudio;
     private double lenghtAudio;
     private String originalName;
 
-    public AudioModel() {
+    public SongModel() {
     }
     
     public String getAudioIDAudio() {

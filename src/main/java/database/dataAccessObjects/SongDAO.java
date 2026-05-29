@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AudioDAO {
+public class SongDAO {
     
     public static String uploadAndRegisterSong(byte[] fileBytes, String originalName, double length) throws Exception {
         String songID = UUID.randomUUID().toString();
