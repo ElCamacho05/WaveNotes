@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class SongDAO {
+public class AudioDAO {
     
     public static String uploadAndRegisterSong(byte[] fileBytes, String originalName, double length) throws Exception {
         String songID = UUID.randomUUID().toString();
@@ -24,10 +24,10 @@ public class SongDAO {
 
         Firestore db = FirestoreClient.getFirestore();
         Map<String, Object> songData = new HashMap<>();
-        songData.put("IDSong", songID);
-        songData.put("URLSong", downloadUrl);
-        songData.put("LengthSong", length);
-        songData.put("OriginalName", originalName);
+        songData.put("audioIDAudio", songID);
+        songData.put("urlAudio", downloadUrl);
+        songData.put("lengthAudio", length);
+        songData.put("originalName", originalName);
 
         db.collection("Songs").document(songID).set(songData);
 
