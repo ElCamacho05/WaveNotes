@@ -50,3 +50,4 @@ build/
 
 ### Env ###
 src/main/webapp/.env
+.smarttomcat
