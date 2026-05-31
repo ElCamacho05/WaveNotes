@@ -50,8 +50,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 </div>
                 <h3 class="heading-lg" style="font-size: 24px; margin-bottom: var(--spacing-base);">Arrastra y suelta tu archivo de audio MP3 o WAV.</h3>
                 
-                <form id="uploadForm" action="/WaveNotes/separator" method="POST" enctype="multipart/form-data">
-                    <label style="cursor: pointer;">
+                    <form id="songUploadForm" action="<%=request.getContextPath()%>/separator" method="POST" enctype="multipart/form-data">                    <label style="cursor: pointer;">
                         <input name="audio" accept=".mp3,.wav" type="file" style="display: none;" onchange="startUpload()"/>
                         <span class="btn btn-login" style="width: auto; padding: var(--spacing-sm) var(--spacing-md); font-size: 16px; border-radius: 99px;">
                             <span class="material-symbols-outlined">cloud_upload</span> Cargar canción
@@ -169,7 +168,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         function startUpload() {
             document.getElementById('uploadUI').style.display = 'none';
             document.getElementById('loadingUI').style.display = 'block';
-            document.getElementById('uploadForm').submit();
+            document.getElementById('songUploadForm').submit();
         }
 
         // Variables globales para el reproductor

@@ -24,11 +24,13 @@
         <div class="hidden-mobile" style="display: flex; gap: var(--spacing-md);">
             <a class="nav-link" href="welcome.jsp">Inicio</a>
             <% if(!isLoggedIn) { %>
-                <a class="nav-link" href="login.jsp?redirect=myPractices.jsp">Prácticas</a>
+                <a class="nav-link" href="login.jsp?redirect=practices"> Prácticas</a>
                 <a class="nav-link" href="login.jsp?redirect=myStats.jsp">Estadísticas</a>
                 <a class="nav-link" href="login.jsp?redirect=mySongs.jsp">Canciones</a>
             <% } else{%>
-                <a class="nav-link" href="myPractices.jsp">Prácticas</a>
+                <form id="uploadForm" action="/WaveNotes/practices" method="GET" style="margin: 0;">
+                    <button class="nav-link" type="submit" style="background: none; border: none; cursor: pointer; font: inherit;"> Prácticas</button>
+                </form>
                 <a class="nav-link" href="myStats.jsp">Estadísticas</a>
                 <a class="nav-link" href="mySongs.jsp">Canciones</a>
             <%} %>
