@@ -1,35 +1,27 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 import org.javatuples.Pair;
 
-public class PracticeModel {
-    // Owner
-    private UserModel userPractice;
-
+public class PracticeModel implements Serializable{
     // Atributos propios
     private String titlePractice;
-    private Date creationPractice;
+    private Date datePractice;
     private int scorePractice;
     private int accuracyPractice;
 
     // Audio
-    private AudioModel audio;
+    private SongModel song;
+    private SongModel track;
 
     // Track seleccionado
-    private String instrumentPractice;
+    private String trackInstrumentPractice;
 
     // Notas generadas
     List<Pair <String, Integer>> notesPractice;
-
-    public UserModel getUserPractice() {
-        return userPractice;
-    }
-
-    public void setUserPractice(UserModel userPractice) {
-        this.userPractice = userPractice;
-    }
 
     public String getTitlePractice() {
         return titlePractice;
@@ -37,14 +29,6 @@ public class PracticeModel {
 
     public void setTitlePractice(String titlePractice) {
         this.titlePractice = titlePractice;
-    }
-
-    public Date getCreationPractice() {
-        return creationPractice;
-    }
-
-    public void setCreationPractice(Date creationPractice) {
-        this.creationPractice = creationPractice;
     }
 
     public int getScorePractice() {
@@ -63,20 +47,36 @@ public class PracticeModel {
         this.accuracyPractice = accuracyPractice;
     }
 
-    public AudioModel getAudio() {
-        return audio;
+    public Date getDatePractice() {
+        return datePractice;
     }
 
-    public void setAudio(AudioModel audio) {
-        this.audio = audio;
+    public void setDatePractice(Date datePractice) {
+        this.datePractice = datePractice;
     }
 
-    public String getInstrumentPractice() {
-        return instrumentPractice;
+    public SongModel getSong() {
+        return song;
     }
 
-    public void setInstrumentPractice(String instrumentPractice) {
-        this.instrumentPractice = instrumentPractice;
+    public void setSong(SongModel song) {
+        this.song = song;
+    }
+
+    public SongModel getTrack() {
+        return track;
+    }
+
+    public void setTrack(SongModel track) {
+        this.track = track;
+    }
+
+    public String getTrackInstrumentPractice() {
+        return trackInstrumentPractice;
+    }
+
+    public void setTrackInstrumentPractice(String trackInstrumentPractice) {
+        this.trackInstrumentPractice = trackInstrumentPractice;
     }
 
     public List<Pair<String, Integer>> getNotesPractice() {
@@ -86,6 +86,7 @@ public class PracticeModel {
     public void setNotesPractice(List<Pair<String, Integer>> notesPractice) {
         this.notesPractice = notesPractice;
     }
+
 
     
 }
