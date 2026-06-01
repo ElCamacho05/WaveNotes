@@ -190,6 +190,7 @@ a {
 /* Botones */
 .btn {
     display: flex;
+    background-color: transparent;
     align-items: center;
     justify-content: center;
     gap: var(--spacing-sm);
@@ -338,13 +339,12 @@ a {
 .side-nav {
     position: fixed;
     left: 0;
-    top: 0;
-    height: 100%;
+    top: 64px;
+    height: calc(100vh - 64px);
     width: 256px; 
     display: flex;
     flex-direction: column;
-    padding: var(--spacing-sm);
-    padding-bottom: var(--spacing-md); 
+    padding: var(--spacing-md) var(--spacing-sm);
     background: rgba(10, 10, 11, 0.8);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);

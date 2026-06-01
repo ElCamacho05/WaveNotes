@@ -19,18 +19,66 @@
 
 <aside class="side-nav">
     <div style="display: flex; flex-direction: column; gap: var(--spacing-base); flex-grow: 1;">
-        <button class="side-nav-btn active">
+        <a class="side-nav-btn button" href="welcome.jsp">
             <span class="material-symbols-outlined">home</span> Inicio
-        </button>
-        <button class="side-nav-btn">
-            <span class="material-symbols-outlined">book</span> Practicas
-        </button>
-        <button class="side-nav-btn">
-            <span class="material-symbols-outlined">bar_chart_4_bars</span> Estadísticas
-        </button>
-        <button class="side-nav-btn">
-            <span class="material-symbols-outlined">music_note</span> Canciones
-        </button>
+        </a>
+        <!-- <% if(!isLoggedIn) { %>
+            <button class="side-nav-btn" href="login.jsp?redirect=practices">
+                <span class="material-symbols-outlined">book</span> Practicas
+            </button>
+
+            <button class="side-nav-btn" href="login.jsp?redirect=myStats.jsp">
+                <span class="material-symbols-outlined">bar_chart_4_bars</span> Estadísticas
+            </button>
+
+            <button class="side-nav-btn" href="login.jsp?redirect=mySongs.jsp">
+                <span class="material-symbols-outlined">music_note</span> Canciones
+            </button>
+        <% } else{%>
+            <form id="uploadForm" action="/WaveNotes/practices" method="GET" style="margin: 0;">
+                <button class="side-nav-btn" href="login.jsp?redirect=practices">
+                    <span class="material-symbols-outlined">book</span> Practicas
+                </button>
+            </form>
+            
+            <button class="side-nav-btn" href="myStats.jsp">
+                <span class="material-symbols-outlined">bar_chart_4_bars</span> Estadísticas
+            </button>
+
+            <button class="side-nav-btn" href="mySongs.jsp">
+                <span class="material-symbols-outlined">music_note</span> Canciones
+            </button>
+        <%} %> -->
+        <% if(!isLoggedIn) { %>
+            <a class="side-nav-btn button" href="login.jsp?redirect=practices">
+                <span class="material-symbols-outlined">book</span>
+                Prácticas
+            </a>
+            <a class="side-nav-btn button" href="login.jsp?redirect=myStats.jsp">
+                <span class="material-symbols-outlined">bar_chart_4_bars</span>
+                Estadísticas
+            </a>
+            <a class="side-nav-btn button" href="login.jsp?redirect=mySongs.jsp">
+                <span class="material-symbols-outlined">music_note</span>
+                Canciones
+            </a>
+        <% } else{%>
+            <form id="uploadForm" action="/WaveNotes/practices" method="GET" style="margin: 0;">
+                <button class="side-nav-btn" type="submit">
+                    <span class="material-symbols-outlined">book</span>
+                    Prácticas
+                <button/>
+            </form>
+            <a class="side-nav-btn button" href="myStats.jsp">
+                <span class="material-symbols-outlined">bar_chart_4_bars</span>
+                Estadísticas
+            </a>
+            <a class="side-nav-btn button" href="mySongs.jsp">
+                <span class="material-symbols-outlined">music_note</span>
+                Canciones
+            </a>
+        <%} %>
+
         <button class="side-nav-btn">
             <span class="material-symbols-outlined">settings</span> Ajustes
         </button>

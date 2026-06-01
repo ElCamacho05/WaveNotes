@@ -20,22 +20,10 @@
 <body>
     <nav class="top-nav" style="justify-content: space-between; padding: 0 32px;">
     <div style="display: flex; align-items: center; gap: 32px;">
+        <img src="/src/main/resources/logo.png">
         <span class="heading-lg text-gradient-brand" style="font-size: 24px;">WaveNotes</span>
-        <div class="hidden-mobile" style="display: flex; gap: var(--spacing-md);">
-            <a class="nav-link" href="welcome.jsp">Inicio</a>
-            <% if(!isLoggedIn) { %>
-                <a class="nav-link" href="login.jsp?redirect=practices"> Prácticas</a>
-                <a class="nav-link" href="login.jsp?redirect=myStats.jsp">Estadísticas</a>
-                <a class="nav-link" href="login.jsp?redirect=mySongs.jsp">Canciones</a>
-            <% } else{%>
-                <form id="uploadForm" action="/WaveNotes/practices" method="GET" style="margin: 0;">
-                    <button class="nav-link" type="submit" style="background: none; border: none; cursor: pointer; font: inherit;"> Prácticas</button>
-                </form>
-                <a class="nav-link" href="myStats.jsp">Estadísticas</a>
-                <a class="nav-link" href="mySongs.jsp">Canciones</a>
-            <%} %>
-        </div>
     </div>
+    
     <div style="display: flex; align-items: center; gap: 16px;">
         <% if(!isLoggedIn) { %>
             <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Login</a>
