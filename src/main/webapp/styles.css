@@ -381,6 +381,7 @@ a {
     font-weight: 500;
     transition: all 0.2s;
     background: transparent;
+    background-color: transparent;
     border: none;
     cursor: pointer;
     text-align: left;

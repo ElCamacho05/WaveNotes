@@ -133,7 +133,6 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         </form>
     </main>
 
-    <%@ include file="includes/footer.jsp" %>
     
     <script type="module" src="<%=request.getContextPath()%>/loginModule.js"></script>
 
