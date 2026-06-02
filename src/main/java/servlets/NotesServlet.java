@@ -18,7 +18,7 @@ public class NotesServlet extends HttpServlet {
     /*
         Servlet para el envio de la pista (track) separada seleccionada por el usuario a backend en python para la obtencion de array de notas musicales
     */
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

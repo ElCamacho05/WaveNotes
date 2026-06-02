@@ -23,7 +23,8 @@ public class LogoutServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         
         if (session != null) {
-            session.invalidate(); 
+            session.removeAttribute("user");
+            session.invalidate();
         }
         
         System.out.println("// (Logout) Sesion de en Tomcat destruida. Sesion terminada");

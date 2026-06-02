@@ -15,7 +15,7 @@ public class AudioStreamServlet extends HttpServlet {
     /*
     Servlet para la recuperacion/desempaquetado de las pistas generadas por SongUploaderServlet
      */
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
             
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

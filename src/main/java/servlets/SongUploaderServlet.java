@@ -26,11 +26,8 @@ public class SongUploaderServlet extends HttpServlet{
     /*
         Servlet para el envio de la cancion del usuario a backend en python para su separacion
     */
-   
+
     private static final long serialVersionUID = 1;
-    
-    public InputStream audioInput;
-    public ArrayList<String> audioListOutput;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,6 +35,10 @@ public class SongUploaderServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        InputStream audioInput = null;
+        ArrayList<String> audioListOutput = null;
+        
+        System.out.println("-- (SongUploader) intentando separar cancion...");
         audioInput = req.getPart("audio").getInputStream();
 
         try {
@@ -85,6 +86,8 @@ public class SongUploaderServlet extends HttpServlet{
                 // Guardado de pistas para la sesion de usuario
                 req.getSession().setAttribute("generatedTracks", inMemTracks);
                 System.out.println("// (SongUploader) Pistas listas para reproduccion.");
+                req.getSession().setAttribute("processedAudio", audioListOutput);
+                resp.sendRedirect(req.getContextPath() + "/createPractice.jsp");
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -95,8 +98,6 @@ public class SongUploaderServlet extends HttpServlet{
             }
         }
 
-        req.getSession().setAttribute("processedAudio", audioListOutput);
-
-        resp.sendRedirect(req.getContextPath() + "/createPractice.jsp");
+        
     }
 }
