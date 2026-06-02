@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,10 +16,12 @@ import database.connections.connection;
 import database.dataAccessObjects.PracticesDAO;
 import database.dataAccessObjects.SongDAO;
 import model.PracticeModel;
+import model.SongModel;
+import model.UserModel;
 
 @WebServlet("/startup")
 public class StartPractice extends HttpServlet {
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -27,53 +30,59 @@ public class StartPractice extends HttpServlet {
         req.setCharacterEncoding("UTF-8"); 
         
         HttpSession session = req.getSession();
-        String uid = (String) session.getAttribute("uid");
+        UserModel user = (UserModel) session.getAttribute("user");
         
-        if (uid == null) {
+        if (user == null) {
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no autenticado");
             return;
         }
 
-        String selectedInstrumentFile = req.getParameter("selectedSong");
-        String titlePractice = req.getParameter("titlePractice");
+        String selectedInstrumentFileName = req.getParameter("selectedSong");
+        String songInstrument = selectedInstrumentFileName.replace(".mp3", "");
+        String songPracticeTitleName = req.getParameter("titlePractice");
         
-        String instrumentName = selectedInstrumentFile.replace(".mp3", ""); 
+        // Song
 
-        // extraccion de la pista de la RAM
-        Map<String, byte[]> inMemTracks = (Map<String, byte[]>) session.getAttribute("generatedTracks");
-        byte[] audioToUpload = inMemTracks.get(selectedInstrumentFile);
+        SongModel song = new SongModel();
 
-        if (audioToUpload == null) {
-            System.out.println("!! (Startup) No se encontro el audio en RAM.");
-            resp.sendRedirect(req.getContextPath() + "/createPractice.jsp");
-            return;
-        }
-
-        String realSongId = "";
+        song.setOriginalName(songPracticeTitleName + songInstrument + ".mp3");
+            // bytes
+            // extraccion de la pista de la RAM
         try {
-            connection.getFirebaseConnection();
-            // carga a Firebase de la cancion
-            System.out.println("-- (Startup) Subiendo " + audioToUpload.length + " bytes a Firebase Storage...");
-
-            // TODO. cambiar la duracion del audio
-            realSongId = SongDAO.uploadAndRegisterSong(audioToUpload, titlePractice + "_" + selectedInstrumentFile, 0.0);
-            
-            System.out.println("// (Startup) Audio subido a Storage exitosamente. ID del audio: " + realSongId);
+            Map<String, byte[]> inMemTracks = (Map<String, byte[]>) session.getAttribute("generatedTracks");
+            byte[] audioToUpload = inMemTracks.get(selectedInstrumentFileName);
+            if (audioToUpload == null) {
+                resp.sendRedirect(req.getContextPath() + "/createPractice.jsp");
+                return;
+            }
+            song.setSongBytes(audioToUpload);
+            song.setDurationAudio(song.getSongDuration());
         } catch (Exception e) {
-            System.out.println("!! (Startup) Error al subir a Storage: " + e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+            System.out.println("!! (Startup) No se encontro el audio en RAM o hubo un error al calcular el peso de la cancion");
 
-        // Construccion de registro de Practica de usuario
+        }
+        
+        try {
+            song = SongDAO.uploadAndRegisterSong(song);
+            if (song.getUrlAudio() == null || song.getUrlAudio().isEmpty()) {
+                System.out.println("!! (Startup) La URL generada fue nula o vacia");
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("!! (Startup) Error al cargar practica en BD");
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al subir archivos.");
+            e.printStackTrace();
+        }
+        
         PracticeModel practice = new PracticeModel();
-        practice.setInstrumentPractice(instrumentName);
-        practice.setTitlePractice(titlePractice);
-        practice.setCreationPractice(new Date());
+        practice.setTrackInstrumentPractice(songInstrument);
+        practice.setTitlePractice(songPracticeTitleName);
+        practice.setDatePractice(new Date());
         practice.setScorePractice(0);
         practice.setAccuracyPractice(0);
+        practice.setSong(song);
 
-        PracticesDAO.createPractice(uid, practice, realSongId);
+        PracticesDAO.createPractice(user.getIDUser(), practice);
 
         System.out.println("-- (Startup) Practica del usuario generada correctamente");
         
