@@ -23,22 +23,46 @@ public class PracticesDAO {
         FirebaseApp app = connection.getFirebaseConnection();
         Firestore db = FirestoreClient.getFirestore();
         
-        String practiceID = UUID.randomUUID().toString();
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("titlePractice", practice.getTitlePractice());
-        data.put("datePractice", practice.getDatePractice());
-        data.put("scorePractice", practice.getScorePractice());
-        data.put("accuracyPractice", practice.getAccuracyPractice());
-        data.put("songIDPractice", practice.getSong().getAudioIDAudio());
-        data.put("trackIDPractice", practice.getSong().getAudioIDAudio());
-        data.put("trackInstrumentPractice", practice.getTrackInstrumentPractice());
-        data.put("notesPractice", practice.getNotesPractice());
+        practice.setIDPractice(UUID.randomUUID().toString());
 
         db.collection("Users").document(uid)
-            .collection("Practices").document(practiceID)
-            .set(data);
+            .collection("Practices").document(practice.getIDPractice())
+            .set(practice);
 
-        return practiceID;
+        return practice.getIDPractice();
+    }
+
+    public static List<PracticeModel> getPractices(String uid) {
+        System.out.println("-- (Practices) Obteniendo practicas");
+        List<PracticeModel> practices = new ArrayList<>();
+        
+        connection.getFirebaseConnection();
+        Firestore db = FirestoreClient.getFirestore();
+
+        if (uid.isEmpty() || uid.equals("")) {
+            System.out.println("!! (Practices) No hay id de usuario valido");
+        }
+
+        try {
+            System.out.println("!! (Practices) Buscando");
+            ApiFuture<QuerySnapshot> futurePractices = db.collection("Users").document(uid).collection("Practices").get();
+            
+            List<QueryDocumentSnapshot> documentsPractices = futurePractices.get().getDocuments();
+
+            for (QueryDocumentSnapshot document : documentsPractices) {
+                PracticeModel practice = document.toObject(PracticeModel.class);
+                
+                if (practice != null) {
+                    practices.add(practice);
+                }
+            }
+            System.out.println("!! (Practices) Practicas obtenidas");
+            return practices;
+
+        } catch (Exception e) {
+            System.out.println("!! Error obteniendo prácticas de Firestore: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

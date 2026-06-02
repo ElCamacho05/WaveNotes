@@ -1,36 +1,42 @@
 package database.dataAccessObjects;
 
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.Bucket;
-import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.cloud.StorageClient;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Bucket;
+import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
+
+import model.SongModel;
+
 public class SongDAO {
     
-    public static String uploadAndRegisterSong(byte[] fileBytes, String originalName, double length) throws Exception {
-        String songID = UUID.randomUUID().toString();
-        String storagePath = "Songs/" + songID + "_" + originalName;
+    public static SongModel uploadAndRegisterSong(SongModel audio) throws Exception {
+        try {
+            audio.setAudioIDAudio(UUID.randomUUID().toString());
 
-        Bucket bucket = StorageClient.getInstance().bucket();
-        Blob blob = bucket.create(storagePath, fileBytes, "audio/mpeg");
+            String storagePath = "Songs/" + audio.getAudioIDAudio() + "_" + audio.getOriginalName();
 
-        String downloadUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucket.getName() + "/o/" + 
-                             URLEncoder.encode(storagePath, "UTF-8") + "?alt=media";
+            Bucket bucket = StorageClient.getInstance().bucket();
+            Blob blob = bucket.create(storagePath, audio.getSongBytes(), "audio/mpeg");
 
-        Firestore db = FirestoreClient.getFirestore();
-        Map<String, Object> songData = new HashMap<>();
-        songData.put("audioIDAudio", songID);
-        songData.put("urlAudio", downloadUrl);
-        songData.put("lengthAudio", length);
-        songData.put("originalName", originalName);
+            String downloadUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucket.getName() + "/o/" + 
+                                URLEncoder.encode(storagePath, "UTF-8") + "?alt=media";
 
-        db.collection("Songs").document(songID).set(songData);
+            audio.setUrlAudio(downloadUrl);
 
-        return songID;
+            Firestore db = FirestoreClient.getFirestore();
+            db.collection("Songs").document(audio.getAudioIDAudio()).set(audio);
+            System.out.println("// (SongDAO) Cancion subida correctamente " + audio.getOriginalName() + ", " + audio.getUrlAudio());
+
+        } catch (Exception e) {
+            System.out.println("!! (SongDAO) Error al subir cancion " + audio.getOriginalName());
+        }
+        
+    return audio;
     }
 }
