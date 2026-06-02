@@ -8,6 +8,7 @@ import org.javatuples.Pair;
 
 public class PracticeModel implements Serializable{
     // Atributos propios
+    private String IDPractice;
     private String titlePractice;
     private Date datePractice;
     private int scorePractice;
@@ -21,7 +22,10 @@ public class PracticeModel implements Serializable{
     private String trackInstrumentPractice;
 
     // Notas generadas
-    List<Pair <String, Integer>> notesPractice;
+    List<NoteModel> notesPractice;
+
+    public PracticeModel() {
+    }
 
     public String getTitlePractice() {
         return titlePractice;
@@ -79,12 +83,20 @@ public class PracticeModel implements Serializable{
         this.trackInstrumentPractice = trackInstrumentPractice;
     }
 
-    public List<Pair<String, Integer>> getNotesPractice() {
+    public List<NoteModel> getNotesPractice() {
         return notesPractice;
     }
 
-    public void setNotesPractice(List<Pair<String, Integer>> notesPractice) {
+    public void setNotesPractice(List<NoteModel> notesPractice) {
         this.notesPractice = notesPractice;
+    }
+
+    public String getIDPractice() {
+        return IDPractice;
+    }
+
+    public void setIDPractice(String iDPractice) {
+        IDPractice = iDPractice;
     }
 
 
