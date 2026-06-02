@@ -53,9 +53,9 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 
                 <div class="btn-group">
                     <% if(!isLoggedIn) { %>
-                        <a href="login.jsp" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
+                        <a href="login.jsp?redirect=practices" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
                     <% } else{%>
-                        <a href="createPractice.jsp" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
+                        <a href="/WaveNotes/practices" class="btn btn-login btn-large" style="width: auto;">Comenzar a aprender</a>
                     <%} %>
                 </div>
                 </div>
