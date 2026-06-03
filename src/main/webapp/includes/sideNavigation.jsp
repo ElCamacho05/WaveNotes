@@ -46,12 +46,10 @@
                 Canciones
             </a>
         <% } else{%>
-            <form id="uploadForm" action="/WaveNotes/practices" method="GET" style="margin: 0;">
-                <a class="side-nav-btn button" type="submit">
-                    <span class="material-symbols-outlined">book</span>
-                    Prácticas
-                </a>
-            </form>
+            <a class="side-nav-btn button" href="practices">
+                <span class="material-symbols-outlined">book</span>
+                Prácticas
+            </a>
             <a class="side-nav-btn button" href="myStats.jsp">
                 <span class="material-symbols-outlined">bar_chart_4_bars</span>
                 Estadísticas
