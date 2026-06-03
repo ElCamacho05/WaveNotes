@@ -46,6 +46,7 @@ async def pitchEndpoint(request: Request):
 
 @app.post("/wn/separator")
 async def separateEndpoint(request: Request):
+    print("-- (server) Separando pistas...")
     result = await trackSeparator.separate(request)
 
     return Response(
