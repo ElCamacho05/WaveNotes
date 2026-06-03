@@ -74,7 +74,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 
         </div>
 
-        <form action="<%=request.getContextPath()%>/startup" method="POST" style="grid-column: span 4; display: flex; flex-direction: column; gap: var(--spacing-md); height: 100%;">
+        <form action="<%=request.getContextPath()%>/practices" method="POST" style="grid-column: span 4; display: flex; flex-direction: column; gap: var(--spacing-md); height: 100%;">
             
             <div id="panelConfig" class="glass-panel disabled-panel" style="padding: var(--spacing-md);">
                 <h4 class="heading-lg" style="font-size: 20px; margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-base);">
