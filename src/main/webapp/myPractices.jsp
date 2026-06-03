@@ -48,26 +48,39 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 
         <section class="practice-grid">
             <c:forEach items="${practices}" var="pract">
-                <div class="glass-panel practice-card">
-                    <div class="card-image-wrapper">
-                        <img src="https://i.pinimg.com/236x/e1/65/d7/e165d74bf2260c25a278cf43e3c32ae7.jpg" alt="Synth" class="card-image"/>
-                    </div>
-                    <h3 class="heading-md">${pract.titlePractice}</h3>
-                    <div class="card-meta text-small text-muted">
-                        <span style="display: flex; align-items: center; gap: 4px;"><span class="material-symbols-outlined" style="font-size: 14px;">schedule</span> 04:22</span>
-                        <span class="card-tag">${pract.trackInstrumentPractice}</span>
-                    </div>
-                    <div class="card-stats-grid">
-                        <div class="stat-box">
-                            <p class="text-small text-muted">Puntuación</p>
-                            <p style="color: var(--primary-container); font-weight: 700; font-size: 18px;">${pract.scorePractice}</p>
+                <form action="<%=request.getContextPath()%>/training" method="GET" style="margin: 0; padding: 0;">
+                    <input type="hidden" name="IDPractice" value="${pract.IDPractice}">
+                    <!-- <input type="hidden" name="practiceTitle" value="${pract.titlePractice}">
+                    <input type="hidden" name="instrument" value="${pract.trackInstrumentPractice}"> -->
+
+                    <div class="glass-panel practice-card" onclick="this.closest('form').submit();" style="cursor: pointer;">
+                        <div class="card-image-wrapper">
+                            <img src="https://i.pinimg.com/236x/e1/65/d7/e165d74bf2260c25a278cf43e3c32ae7.jpg" alt="Synth" class="card-image"/>
                         </div>
-                        <div class="stat-box">
-                            <p class="text-small text-muted">Precisión</p>
-                            <p style="color: var(--primary); font-weight: 700; font-size: 18px;">${pract.accuracyPractice}</p>
+
+                        <h3 class="heading-md">${pract.titlePractice}</h3>
+
+                        <div class="card-meta text-small text-muted">
+                            <span style="display: flex; align-items: center; gap: 4px;">
+                                <span class="material-symbols-outlined" style="font-size: 14px;">schedule</span> 
+                                04:22
+                            </span>
+                            <span class="card-tag">${pract.trackInstrumentPractice}</span>
+                        </div>
+
+                        <div class="card-stats-grid">
+                            <div class="stat-box">
+                                <p class="text-small text-muted">Puntuación</p>
+                                <p style="color: var(--primary-container); font-weight: 700; font-size: 18px;">${pract.scorePractice}</p>
+                            </div>
+                            <div class="stat-box">
+                                <p class="text-small text-muted">Precisión</p>
+                                <p style="color: var(--primary); font-weight: 700; font-size: 18px;">${pract.accuracyPractice}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+                
             </c:forEach>
             
             <div class="new-practice-card" onclick="window.location.href='createPractice.jsp'">

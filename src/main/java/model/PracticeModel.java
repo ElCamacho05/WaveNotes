@@ -99,6 +99,13 @@ public class PracticeModel implements Serializable{
         IDPractice = iDPractice;
     }
 
+    @Override
+    public String toString() {
+        return "PracticeModel [IDPractice=" + IDPractice + ", titlePractice=" + titlePractice + ", song=" + song
+                + ", trackInstrumentPractice=" + trackInstrumentPractice + "]";
+    }
+
+    
 
     
 }
