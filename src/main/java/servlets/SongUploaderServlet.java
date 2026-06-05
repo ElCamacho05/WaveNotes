@@ -44,6 +44,8 @@ public class SongUploaderServlet extends HttpServlet{
         try {
             // lectura del .mp3
             byte[] fileBytes = audioInput.readAllBytes();
+            req.getSession().setAttribute("originalSongBytes", fileBytes);
+            
             System.out.println("-- (SongUploader) Enviando " + fileBytes.length + " bytes a Python...");
 
             HttpClient client = HttpClient.newBuilder() // uvicorn no me funcionaba con otra version

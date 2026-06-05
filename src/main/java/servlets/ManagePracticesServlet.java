@@ -43,7 +43,7 @@ public class ManagePracticesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         System.out.println("-- (PracticesServlet) Subiendo informacion de la practica a Firebase");
 
-        req.setCharacterEncoding("UTF-8"); 
+        req.setCharacterEncoding("UTF-8");
         
         HttpSession session = req.getSession();
         UserModel user = (UserModel) session.getAttribute("user");
@@ -59,29 +59,43 @@ public class ManagePracticesServlet extends HttpServlet {
         
         // Song
 
+        SongModel track = new SongModel();
         SongModel song = new SongModel();
 
-        song.setOriginalName(songPracticeTitleName + songInstrument + ".mp3");
+        track.setOriginalName(songPracticeTitleName + "_" + songInstrument + ".mp3");
+        song.setOriginalName(songPracticeTitleName + "_original" + ".mp3");
             // bytes
             // extraccion de la pista de la RAM
         try {
             Map<String, byte[]> inMemTracks = (Map<String, byte[]>) session.getAttribute("generatedTracks");
-            byte[] audioToUpload = inMemTracks.get(selectedInstrumentFileName);
-            if (audioToUpload == null) {
+            byte[] trackToUpload = inMemTracks.get(selectedInstrumentFileName);
+            if (trackToUpload == null) {
                 resp.sendRedirect(req.getContextPath() + "/createPractice.jsp");
                 return;
             }
-            song.setSongBytes(audioToUpload);
+            track.setSongBytes(trackToUpload);
+            track.setDurationAudio(track.getSongDuration());
+
+            byte[] songToUpload = (byte[]) session.getAttribute("originalSongBytes");
+            if (songToUpload == null) {
+                resp.sendRedirect(req.getContextPath() + "/createPractice.jsp");
+                return;
+            }
+            song.setSongBytes(songToUpload);
             song.setDurationAudio(song.getSongDuration());
+
         } catch (Exception e) {
             System.out.println("!! (PracticesServlet) No se encontro el audio en RAM o hubo un error al calcular el peso de la cancion");
 
         }
         
         try {
+            track = SongDAO.uploadAndRegisterSong(track);
             song = SongDAO.uploadAndRegisterSong(song);
-            if (song.getUrlAudio() == null || song.getUrlAudio().isEmpty()) {
+
+            if (track.getUrlAudio() == null || track.getUrlAudio().isEmpty() || song.getUrlAudio() == null || song.getUrlAudio().isEmpty()) {
                 System.out.println("!! (PracticesServlet) La URL generada fue nula o vacia");
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al generar URLs en Storage.");
                 return;
             }
         } catch (Exception e) {
@@ -97,12 +111,14 @@ public class ManagePracticesServlet extends HttpServlet {
         practice.setScorePractice(0);
         practice.setAccuracyPractice(0);
         practice.setSong(song);
+        practice.setTrack(track);
 
         PracticesDAO.createPractice(user.getIDUser(), practice);
 
         System.out.println("-- (PracticesServlet) Practica del usuario generada correctamente");
         
-        session.removeAttribute("generatedTracks"); // eliminacion de pistas temporales
+        session.removeAttribute("generatedTracks");
+        session.removeAttribute("originalSongBytes");
         
         resp.sendRedirect(req.getContextPath() + "/myPractices.jsp");
     }
