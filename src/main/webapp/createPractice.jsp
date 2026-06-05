@@ -89,7 +89,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label class="radio-label">
                                     Título de la práctica:
-                                    <input type="text" name="titlePractice">
+                                    <input type="text" name="titlePractice" required>
                                 </label>
                             </div>
 
