@@ -2,9 +2,6 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-
-import org.javatuples.Pair;
 
 public class PracticeModel implements Serializable{
     // Atributos propios
@@ -22,7 +19,7 @@ public class PracticeModel implements Serializable{
     private String trackInstrumentPractice;
 
     // Notas generadas
-    List<NoteModel> notesPractice;
+    private String notesJson;
 
     public PracticeModel() {
     }
@@ -83,12 +80,12 @@ public class PracticeModel implements Serializable{
         this.trackInstrumentPractice = trackInstrumentPractice;
     }
 
-    public List<NoteModel> getNotesPractice() {
-        return notesPractice;
+    public String getNotesJson() {
+        return notesJson;
     }
 
-    public void setNotesPractice(List<NoteModel> notesPractice) {
-        this.notesPractice = notesPractice;
+    public void setNotesJson(String notesJson) {
+        this.notesJson = notesJson;
     }
 
     public String getIDPractice() {
