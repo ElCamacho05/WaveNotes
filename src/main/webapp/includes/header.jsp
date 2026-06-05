@@ -8,11 +8,12 @@
     <div style="display: flex; align-items: center; gap: 16px;">
         <% if(!isLoggedIn) { %>
             <a href="login.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Login</a>
+            <a href="login.jsp?redirect=practices" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
         <% } else{%>
             <!-- <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span> -->
             <span class="text-muted" style="margin-right: 8px;">Hola, ${user.nameUser}</span>
+            <a href="/WaveNotes/practices" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
         <%} %>
 
-        <a href="createPractice.jsp" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
     </div>
 </nav>
