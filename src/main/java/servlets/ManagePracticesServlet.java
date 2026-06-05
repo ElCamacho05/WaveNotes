@@ -1,6 +1,10 @@
 package servlets;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +68,10 @@ public class ManagePracticesServlet extends HttpServlet {
 
         track.setOriginalName(songPracticeTitleName + "_" + songInstrument + ".mp3");
         song.setOriginalName(songPracticeTitleName + "_original" + ".mp3");
-            // bytes
+        
+        String jsonNotes = "[]";
+
+        // bytes
             // extraccion de la pista de la RAM
         try {
             Map<String, byte[]> inMemTracks = (Map<String, byte[]>) session.getAttribute("generatedTracks");
@@ -84,6 +91,40 @@ public class ManagePracticesServlet extends HttpServlet {
             song.setSongBytes(songToUpload);
             song.setDurationAudio(song.getSongDuration());
 
+            // extraccion de notas mediante Endpoint de python
+            System.out.println("-- (PracticesServlet) Solicitando extraccion de notas a Python para: " + songInstrument);
+            URI uri;
+            switch (songInstrument) {
+                case "drums": uri = new URI("http://127.0.0.1:8000/wn/drums"); break;
+                case "bass":  uri = new URI("http://127.0.0.1:8000/wn/bass"); break;
+                case "other": 
+                case "guitar":uri = new URI("http://127.0.0.1:8000/wn/guitar"); break;
+                default:      uri = new URI("http://127.0.0.1:8000/wn/pitch"); break;
+            }
+
+            HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header("Content-Type", "audio/mpeg")
+                .POST(HttpRequest.BodyPublishers.ofByteArray(trackToUpload))
+                .build();
+                
+            HttpResponse<String> pythonResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            if (pythonResponse.statusCode() == 200) { 
+                String jsonResult = pythonResponse.body();
+                int startIndex = jsonResult.indexOf("[");
+                int endIndex = jsonResult.lastIndexOf("]");
+                
+                if(startIndex != -1 && endIndex != -1) {
+                    jsonNotes = jsonResult.substring(startIndex, endIndex + 1);
+                    System.out.println("// (PracticesServlet) Notas extraidas correctamente");
+                } else {
+                    System.out.println("!! (PracticesServlet) Python no devolvio un formato de array válido");
+                }
+            } else {
+                System.out.println("!! (PracticesServlet) Error HTTP de Python: " + pythonResponse.statusCode());
+            }
         } catch (Exception e) {
             System.out.println("!! (PracticesServlet) No se encontro el audio en RAM o hubo un error al calcular el peso de la cancion");
 
@@ -112,10 +153,11 @@ public class ManagePracticesServlet extends HttpServlet {
         practice.setAccuracyPractice(0);
         practice.setSong(song);
         practice.setTrack(track);
+        practice.setNotesJson(jsonNotes);
 
         PracticesDAO.createPractice(user.getIDUser(), practice);
 
-        System.out.println("-- (PracticesServlet) Practica del usuario generada correctamente");
+        System.out.println("// (PracticesServlet) Practica del usuario generada correctamente");
         
         session.removeAttribute("generatedTracks");
         session.removeAttribute("originalSongBytes");
