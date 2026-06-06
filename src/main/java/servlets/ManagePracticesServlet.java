@@ -163,9 +163,9 @@ public class ManagePracticesServlet extends HttpServlet {
         practice.setTrack(track);
         practice.setNotesJson(jsonNotes);
 
-        PracticesDAO.createPractice(user.getIDUser(), practice);
+        String newPracticeID = PracticesDAO.createPractice(user.getIDUser(), practice);
 
-        System.out.println("// (PracticesServlet) Practica del usuario generada correctamente");
+        System.out.println("// (PracticesServlet) Practica del usuario generada correctamente: " + newPracticeID);
         
         session.removeAttribute("generatedTracks");
         session.removeAttribute("originalSongBytes");
