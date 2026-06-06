@@ -29,6 +29,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
     </style>
     
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles/practice.css">
 </head>
 
 <body data-pistas="<%= pistasListas %>">
@@ -133,7 +134,34 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         </form>
     </main>
 
-    
+    <div id="global-player" class="mini-player">
+        <div class="player-track-info">
+            <span class="material-symbols-outlined track-icon">music_note</span>
+            <div class="track-details">
+                <span id="player-title" class="track-title">Pista</span>
+                <span class="track-subtitle">WaveNotes Preview</span>
+            </div>
+        </div>
+        
+        <div class="player-controls">
+            <button id="player-play-btn" class="ctrl-btn main-ctrl">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" id="player-play-icon">pause</span>
+            </button>
+            <div class="player-progress">
+                <span id="player-time-current" class="time-text">0:00</span>
+                <div class="progress-bar-container" id="player-progress-container">
+                    <div class="progress-fill" id="player-progress-fill"></div>
+                </div>
+                <span id="player-time-total" class="time-text">0:00</span>
+            </div>
+        </div>
+        
+        <div class="player-volume">
+            <span class="material-symbols-outlined" style="font-size: 18px;">volume_up</span>
+            <input type="range" id="player-volume-slider" min="0" max="1" step="0.01" value="1">
+        </div>
+    </div>
+
     <script type="module" src="<%=request.getContextPath()%>/loginModule.js"></script>
 
     <script>
@@ -170,29 +198,84 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             document.getElementById('songUploadForm').submit();
         }
 
-        // Variables globales para el reproductor
+        // variables de reproduccion
         let currentAudio = null;
         let currentButton = null;
         let currentTrackName = null;
 
+        const globalPlayer = document.getElementById('global-player');
+        const mainContent = document.querySelector('.app-content');
+        const playerTitle = document.getElementById('player-title');
+        const playerPlayBtn = document.getElementById('player-play-btn');
+        const playerPlayIcon = document.getElementById('player-play-icon');
+        const playerProgressFill = document.getElementById('player-progress-fill');
+        const playerTimeCurrent = document.getElementById('player-time-current');
+        const playerTimeTotal = document.getElementById('player-time-total');
+        const progressContainer = document.getElementById('player-progress-container');
+        const volumeSlider = document.getElementById('player-volume-slider');
+
+        globalPlayer.classList.add('visible');
+        mainContent.classList.add('player-active');
+
+        // Formato matemático para segundos a mm:ss
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return m + ":" + (s < 10 ? "0" : "") + s;
+        }
+
+        // Play/Pause desde el Reproductor Global
+        playerPlayBtn.addEventListener('click', () => {
+            if (!currentAudio) return;
+            const iconSpan = currentButton.querySelector('.material-symbols-outlined');
+            
+            if (currentAudio.paused) {
+                currentAudio.play();
+                playerPlayIcon.innerText = 'pause';
+                iconSpan.innerText = 'pause_circle';
+            } else {
+                currentAudio.pause();
+                playerPlayIcon.innerText = 'play_arrow';
+                iconSpan.innerText = 'play_circle';
+            }
+        });
+
+        // Control de Volumen
+        volumeSlider.addEventListener('input', (e) => {
+            if (currentAudio) currentAudio.volume = e.target.value;
+        });
+
+        // Adelantar/Atrasar canción al dar clic en la barra
+        progressContainer.addEventListener('click', (e) => {
+            if (!currentAudio) return;
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            currentAudio.currentTime = pos * currentAudio.duration;
+        });
+
+        // Función Principal del botón en las listas (Bento Box)
         function playPreview(trackName, btnElement) {
             const iconSpan = btnElement.querySelector('.material-symbols-outlined');
 
+            // Si es la misma canción, solo pausar/reproducir
             if (currentTrackName === trackName) {
                 if (currentAudio.paused) {
                     currentAudio.play();
                     iconSpan.innerText = 'pause_circle';
+                    playerPlayIcon.innerText = 'pause';
                 } else {
                     currentAudio.pause();
                     iconSpan.innerText = 'play_circle';
+                    playerPlayIcon.innerText = 'play_arrow';
                 }
                 return;
             }
 
+            // Si hay otra canción sonando, la matamos
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
-
                 if (currentButton) {
                     currentButton.querySelector('.material-symbols-outlined').innerText = 'play_circle';
                 }
@@ -201,15 +284,38 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             currentTrackName = trackName;
             currentButton = btnElement;
 
+            // Mostrar el reproductor global deslizándolo hacia arriba
+            globalPlayer.classList.add('visible');
+            mainContent.classList.add('player-active');
+            
+            // Actualizar el título del reproductor (quitamos el .mp3)
+            playerTitle.innerText = "PISTA: " + trackName.replace('.mp3', '').toUpperCase();
+
+            // Cargar y reproducir
             const url = '/WaveNotes/stream?track=' + trackName;
             currentAudio = new Audio(url);
+            
+            // Sincronizar el slider de volumen actual con el audio nuevo
+            currentAudio.volume = volumeSlider.value;
+
+            // Actualizar interfaz en tiempo real
+            currentAudio.ontimeupdate = () => {
+                playerTimeCurrent.innerText = formatTime(currentAudio.currentTime);
+                playerTimeTotal.innerText = formatTime(currentAudio.duration);
+                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+                playerProgressFill.style.width = percent + '%';
+            };
 
             currentAudio.onended = function() {
                 iconSpan.innerText = 'play_circle';
+                playerPlayIcon.innerText = 'play_arrow';
+                playerProgressFill.style.width = '0%';
+                playerTimeCurrent.innerText = "0:00";
             };
 
             currentAudio.play().then(() => {
                 iconSpan.innerText = 'pause_circle';
+                playerPlayIcon.innerText = 'pause';
             }).catch(error => {
                 console.log("Aun no hay pistas listas para reproducir:", error);
             });

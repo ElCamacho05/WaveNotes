@@ -1,0 +1,74 @@
+/* =========================================
+   MINI REPRODUCTOR GLOBAL (Estilo Spotify)
+   ========================================= */
+.mini-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 72px; /* Super minimalista */
+    background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-gutter);
+    z-index: 100;
+    /* Animación para esconderlo debajo de la pantalla */
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Solo se desliza hacia arriba cuando recibe esta clase */
+.mini-player.visible {
+    transform: translateY(0);
+}
+
+/* Ajusta el padding del main para que el player no tape el contenido de abajo */
+.app-content.player-active {
+    padding-bottom: 120px; 
+}
+
+/* Sección 1: Información de la Pista */
+.player-track-info {
+    display: flex; align-items: center; gap: var(--spacing-sm); width: 25%; min-width: 150px;
+}
+.track-icon {
+    background: rgba(0, 209, 255, 0.1); color: var(--primary-container); padding: 8px; border-radius: 8px;
+}
+.track-details { display: flex; flex-direction: column; }
+.track-title { font-family: var(--font-headline); font-weight: 600; font-size: 14px; color: var(--on-surface); }
+.track-subtitle { font-size: 11px; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Sección 2: Controles Centrales */
+.player-controls {
+    display: flex; flex-direction: column; align-items: center; width: 50%; max-width: 500px; gap: 4px;
+}
+.ctrl-btn {
+    background: transparent; border: none; color: var(--on-surface); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.main-ctrl {
+    background: var(--on-surface); color: var(--surface-container-lowest); border-radius: 50%; width: 32px; height: 32px;
+}
+.main-ctrl:hover { background: var(--primary-container); color: var(--surface-container-lowest); transform: scale(1.05); }
+
+/* Barra de progreso clickeable */
+.player-progress { display: flex; align-items: center; width: 100%; gap: 8px; }
+.time-text { font-size: 11px; color: var(--on-surface-variant); font-variant-numeric: tabular-nums; min-width: 35px; text-align: center; }
+.progress-bar-container { flex: 1; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 99px; cursor: pointer; position: relative; }
+.progress-bar-container:hover .progress-fill { background: var(--primary-container); }
+.progress-fill { height: 100%; width: 0%; background: var(--on-surface); border-radius: 99px; transition: width 0.1s linear; pointer-events: none; }
+
+/* Sección 3: Volumen */
+.player-volume {
+    display: flex; align-items: center; justify-content: flex-end; width: 25%; gap: 8px; color: var(--on-surface-variant);
+}
+.player-volume input[type="range"] {
+    width: 80px; height: 4px; -webkit-appearance: none; background: rgba(255, 255, 255, 0.1); border-radius: 99px; outline: none; cursor: pointer;
+}
+.player-volume input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--on-surface); transition: background 0.2s;
+}
+.player-volume input[type="range"]:hover::-webkit-slider-thumb { background: var(--primary-container); }
