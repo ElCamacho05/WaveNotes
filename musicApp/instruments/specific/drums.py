@@ -35,33 +35,42 @@ async def extract_drums(request: Request):
 
         # espectrograma de las notas
         S = np.abs(librosa.stft(y))
+        freqs = librosa.fft_frequencies(sr=sr)
 
-        freqs = librosa.fft_freqs(sr=sr)
-
-        low_band = (freqs > 20) & (freqs < 150)     # rango del Bombo
-        mid_band = (freqs > 150) & (freqs < 2000)   # rango de Tarola
-        high_band = (freqs > 4000)                        # rango de Platillos
+        band_kick      = (freqs > 20) & (freqs < 80)     # Bombo
+        band_floor_tom = (freqs > 80) & (freqs < 150)    # Tom de Piso
+        band_snare     = (freqs > 150) & (freqs < 400)    # Tarola / Caja
+        band_high_tom  = (freqs > 400) & (freqs < 1500)   # Toms altos/medios
+        band_hihat     = (freqs > 4000) & (freqs < 8000)   # Hi-hat
+        band_crash     = (freqs > 8000)                    # Crash / Ride
 
         clasif = []
 
         for i, frame in enumerate(beat_frames):
             ie = S[:, frame]
             
-            e_bass_drum = np.sum(ie[low_band])          # bombo
-            e_snare = np.sum(ie[mid_band])              # caja/tarola
-            e_hi_hat = np.sum(ie[high_band])            # platillos
+            e_kick      = np.sum(ie[band_kick])
+            e_floor_tom = np.sum(ie[band_floor_tom])
+            e_snare     = np.sum(ie[band_snare])
+            e_high_tom  = np.sum(ie[band_high_tom])
+            e_hihat     = np.sum(ie[band_hihat])
+            e_crash     = np.sum(ie[band_crash])
             
-            if e_bass_drum > energia_tarola and e_bass_drum > e_hi_hat:
-                tipo = 0 # KICK
-            elif e_hi_hat > e_bass_drum and e_hi_hat > energia_tarola:
-                tipo = 2 # HIHAT
-            else:
-                tipo = 1 # SNARE
+            e = {
+                0: e_kick,       # 0 = KICK
+                1: e_snare,      # 1 = SNARE
+                2: e_hihat,      # 2 = HIHAT
+                3: e_high_tom,   # 3 = HIGH TOM
+                4: e_floor_tom,  # 4 = FLOOR TOM
+                5: e_crash       # 5 = CRASH/RIDE
+            }
+            
+            tipo_ganador = max(e, key=e.get)
                 
             rt_seconds = float(beat_times[i])
-            clasif.append({"targetDrum": tipo, "time": rt_seconds})
+            clasif.append({"targetDrum": tipo_ganador, "time": rt_seconds})
         
-        print(f"!! Extracción completada: {len(clasif)} golpes de batería detectados")
+        print(f"!! Extraccion completada: {len(clasif)} golpes detectados")
 
         return {"status": "success", "notas": clasif}
     except Exception as e:
