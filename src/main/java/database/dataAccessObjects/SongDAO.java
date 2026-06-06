@@ -17,25 +17,31 @@ public class SongDAO {
         try {
             audio.setAudioIDAudio(UUID.randomUUID().toString());
 
-            String storagePath = "Songs/" + audio.getAudioIDAudio() + "_" + audio.getOriginalName();
+            String fileName = audio.getAudioIDAudio() + "_" + audio.getOriginalName();
+            String storagePath = "Songs/" + fileName;
 
+            // subida a firebase
             Bucket bucket = StorageClient.getInstance().bucket();
             Blob blob = bucket.create(storagePath, audio.getSongBytes(), "audio/mpeg");
 
-            String downloadUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucket.getName() + "/o/" + 
-                                URLEncoder.encode(storagePath, "UTF-8") + "?alt=media";
+            // codificacion para que la url no tenga espacios, sino %20 que los representa
+            String encodedFileName = URLEncoder.encode(fileName, "UTF-8").replace("+", "%20");
+
+            String downloadUrl = "https://firebasestorage.googleapis.com/v0/b/" + bucket.getName() + "/o/Songs%2F" + encodedFileName + "?alt=media";
 
             audio.setUrlAudio(downloadUrl);
 
+            // guardado de metadatos de la cancion
             Firestore db = FirestoreClient.getFirestore();
             db.collection("Songs").document(audio.getAudioIDAudio()).set(audio);
+            
             System.out.println("// (SongDAO) Cancion subida correctamente " + audio.getOriginalName() + ", " + audio.getUrlAudio());
 
         } catch (Exception e) {
             System.out.println("!! (SongDAO) Error al subir cancion " + audio.getOriginalName() + " : " + e);
         }
         
-    return audio;
+        return audio;
     }
 
     public static void deleteSong(SongModel song) {
