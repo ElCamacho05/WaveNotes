@@ -1,13 +1,11 @@
 package database.dataAccessObjects;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -33,18 +31,18 @@ public class PracticesDAO {
     }
 
     public static List<PracticeModel> getPractices(String uid) {
-        System.out.println("-- (Practices) Obteniendo practicas");
+        System.out.println("-- (PracticesDAO) Obteniendo practicas");
         List<PracticeModel> practices = new ArrayList<>();
         
         connection.getFirebaseConnection();
         Firestore db = FirestoreClient.getFirestore();
 
         if (uid.isEmpty() || uid.equals("")) {
-            System.out.println("!! (Practices) No hay id de usuario valido");
+            System.out.println("!! (PracticesDAO) No hay id de usuario valido");
         }
 
         try {
-            System.out.println("!! (Practices) Buscando");
+            System.out.println("!! (PracticesDAO) Buscando");
             ApiFuture<QuerySnapshot> futurePractices = db.collection("Users").document(uid).collection("Practices").get();
             
             List<QueryDocumentSnapshot> documentsPractices = futurePractices.get().getDocuments();
@@ -56,13 +54,68 @@ public class PracticesDAO {
                     practices.add(practice);
                 }
             }
-            System.out.println("!! (Practices) Practicas obtenidas");
+            System.out.println("!! (PracticesDAO) Practicas obtenidas");
             return practices;
 
         } catch (Exception e) {
             System.out.println("!! Error obteniendo prácticas de Firestore: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+
+    public static PracticeModel getPracticeByID(String uid, String IDPractice) {
+        if (uid == null || uid.trim().isEmpty() || IDPractice == null || IDPractice.trim().isEmpty()) {
+            System.out.println("!! (PracticesDAO) Error: UID o IDPractice inválidos para la búsqueda.");
+            return null;
+        }
+
+        System.out.println("-- (PracticesDAO) Buscando practica : " + IDPractice);
+        
+        connection.getFirebaseConnection();
+        Firestore db = FirestoreClient.getFirestore();
+
+        try {
+            ApiFuture<DocumentSnapshot> futureDocument = db.collection("Users").document(uid)
+                    .collection("Practices").document(IDPractice).get();
+            
+            DocumentSnapshot document = futureDocument.get();
+            
+            if (document.exists()) {
+                System.out.println("// (PracticesDAO) Practica encontrada");
+                return document.toObject(PracticeModel.class);
+            } else {
+                System.out.println("!! (PracticesDAO) Practica inexistente");
+                return null;
+            }
+
+        } catch (Exception e) {
+            System.out.println("!! (PracticesDAO) Error al obtener la practica: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void deletePractice(String uid, String IDPractice) {
+        if (uid == null || uid.trim().isEmpty() || IDPractice == null || IDPractice.trim().isEmpty()) {
+            System.out.println("!! (PracticesDAO) Practica o ID de usuario invalidos.");
+            return;
+        }
+
+        System.out.println("-- (PracticesDAO) Eliminando la practica: " + IDPractice);
+        
+        connection.getFirebaseConnection();
+        Firestore db = FirestoreClient.getFirestore();
+
+        try {
+            db.collection("Users").document(uid)
+                .collection("Practices").document(IDPractice)
+                .delete();
+
+            System.out.println("// (PracticesDAO) Practica eliminada de Firestore");
+        } catch (Exception e) {
+            System.out.println("!! (PracticesDAO) Error al eliminar la practica: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

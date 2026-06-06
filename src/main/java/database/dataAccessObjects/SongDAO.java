@@ -1,8 +1,6 @@
 package database.dataAccessObjects;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import com.google.cloud.firestore.Firestore;
@@ -34,9 +32,41 @@ public class SongDAO {
             System.out.println("// (SongDAO) Cancion subida correctamente " + audio.getOriginalName() + ", " + audio.getUrlAudio());
 
         } catch (Exception e) {
-            System.out.println("!! (SongDAO) Error al subir cancion " + audio.getOriginalName());
+            System.out.println("!! (SongDAO) Error al subir cancion " + audio.getOriginalName() + " : " + e);
         }
         
     return audio;
+    }
+
+    public static void deleteSong(SongModel song) {
+        if (song == null || song.getAudioIDAudio() == null || song.getAudioIDAudio().trim().isEmpty()) {
+            System.out.println("!! (SongDAO) Error: Cancion o ID invalidos");
+            return;
+        }
+
+        System.out.println("-- (SongDAO) Intentando eliminar la cancion y su audio: " + song.getAudioIDAudio());
+
+        try {
+            // eliminar el archivo de cancion mp3/wav por completo (Storage)
+            String storagePath = "Songs/" + song.getAudioIDAudio() + "_" + song.getOriginalName();
+            Bucket bucket = StorageClient.getInstance().bucket();
+            
+            Blob blob = bucket.get(storagePath);
+            if (blob != null) {
+                blob.delete();
+                System.out.println("// (SongDAO) Archivo de audio eliminado de Storage: " + storagePath);
+            } else {
+                System.out.println("!! (SongDAO) El archivo físico no se encontro en Storage (posiblemente ya fue borrado antes)");
+            }
+
+            // eliminar objeto del catalogo (Firestore)
+            Firestore db = FirestoreClient.getFirestore();
+            db.collection("Songs").document(song.getAudioIDAudio()).delete();
+            System.out.println("-- (SongDAO) Documento de cancion eliminado de BD");
+
+        } catch (Exception e) {
+            System.out.println("!! (SongDAO) Error al eliminar la cancion: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

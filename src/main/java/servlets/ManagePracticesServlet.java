@@ -45,8 +45,16 @@ public class ManagePracticesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String action = req.getParameter("action");
+        
+        if ("DELETE".equals(action)) {
+            System.out.println("-- (PracticesServlet) Redirigiendo POST a doDelete...");
+            doDelete(req, resp);
+            return;
+        }
+        
         System.out.println("-- (PracticesServlet) Subiendo informacion de la practica a Firebase");
-
+        
         req.setCharacterEncoding("UTF-8");
         
         HttpSession session = req.getSession();
@@ -162,6 +170,35 @@ public class ManagePracticesServlet extends HttpServlet {
         session.removeAttribute("generatedTracks");
         session.removeAttribute("originalSongBytes");
         
-        resp.sendRedirect(req.getContextPath() + "/myPractices.jsp");
+        resp.sendRedirect(req.getContextPath() + "/practices");
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("-- (PracticesServlet) Eliminando practica en Firebase");
+
+        HttpSession session = req.getSession();
+        
+        UserModel user = (UserModel) session.getAttribute("user");
+        String IDPractice = (String) req.getParameter("practiceID");
+
+        try {
+            PracticeModel practice = PracticesDAO.getPracticeByID(user.getIDUser(), IDPractice);
+            // eliminar canciones que componen la practica antes de eliminar el objeto completo
+            if (practice != null) {
+                SongDAO.deleteSong(practice.getSong());
+                SongDAO.deleteSong(practice.getTrack());
+                PracticesDAO.deletePractice(user.getIDUser(), practice.getIDPractice());
+                System.out.println("// (PracticesServlet) Practica eliminada");
+            }
+            else {
+                System.out.println("!! (PracticesServlet) No se pudo eliminar practica");
+            }
+            
+        } catch (Exception e) {
+            System.out.println("!! (PracticesServlet) Error eliminando practica");
+        }
+        
+        resp.sendRedirect(req.getContextPath() + "/practices");
     }
 }

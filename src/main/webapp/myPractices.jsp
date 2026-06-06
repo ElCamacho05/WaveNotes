@@ -77,6 +77,12 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                                 <p class="text-small text-muted">Precisión</p>
                                 <p style="color: var(--primary); font-weight: 700; font-size: 18px;">${pract.accuracyPractice}</p>
                             </div>
+                            <div class="delete-action-wrapper">
+                                <button type="button" class="btn-delete" title="Eliminar Práctica" 
+                                        onclick="triggerDelete('${pract.IDPractice}', event)">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -89,6 +95,24 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             </div>
         </section>
     </main>
+
+    <!-- No se puede anidar de alguna forma el form de eliminacion, asi q toca incrustar por separado el comportamiento -->
+    <form id="DeleteForm" action="<%=request.getContextPath()%>/practices" method="POST" style="display: none;">
+        <input type="hidden" name="action" value="DELETE">
+        <input type="hidden" name="practiceID" id="masterPracticeID" value="">
+    </form>
+
+    <script>
+        function triggerDelete(practiceId, event) {
+            event.stopPropagation();
+            
+            if(confirm('¿Estás seguro de que deseas eliminar esta práctica? Esta acción es irreversible.')) {
+                
+                document.getElementById('masterPracticeID').value = practiceId;
+                document.getElementById('DeleteForm').submit();
+            }
+        }
+    </script>
 
     <script type="module" src="<%=request.getContextPath()%>/loginModule.js"></script>
 </body>

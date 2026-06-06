@@ -789,6 +789,62 @@ a {
     box-shadow: 0 10px 30px -10px rgba(0, 209, 255, 0.15);
 }
 
+/* =========================================
+   ANIMACIÓN DEL BOTÓN ELIMINAR (TARJETAS)
+   ========================================= */
+
+/* Cambiamos a Flexbox para que la animación de empuje fluya a 60 FPS */
+.card-stats-grid {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+}
+
+.stat-box {
+    flex: 1; /* Esto hace que los recuadros se encojan automáticamente al ser empujados */
+    /* Tus estilos de fondo y bordes actuales se mantienen intactos */
+}
+
+/* El contenedor nace con ancho 0 y oculto para que los recuadros ocupen el 100% */
+.delete-action-wrapper {
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Curva suave de animación */
+}
+
+/* Al hacer hover en toda la tarjeta, el contenedor crece a la derecha y empuja la UI */
+.practice-card:hover .delete-action-wrapper {
+    width: 48px; /* El tamaño exacto del botón */
+    opacity: 1;
+    margin-left: 8px; /* Un pequeño respiro visual para separarlo de la precisión */
+}
+
+/* Diseño moderno del botón basurero */
+.btn-delete {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 74, 74, 0.3);
+    background: rgba(255, 74, 74, 0.1);
+    color: #ff4a4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+    background: rgba(255, 74, 74, 0.2);
+    border-color: #ff4a4a;
+    transform: scale(1.05);
+}
+
 /* Imagen y Overlay */
 .card-image-wrapper {
     position: relative;
@@ -940,4 +996,54 @@ a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* =========================================
+   NUEVOS ESTILOS PARA LA BATERÍA 3D
+   ========================================= */
+:root {
+    --tertiary: #ffcdfa;
+    --primary-container: #00d1ff;
+}
+
+.perspective-view {
+    perspective: 1000px;
+}
+
+.highway-track {
+    transform: rotateX(45deg);
+    transform-origin: bottom;
+    border-left: 1px solid rgba(255,255,255,0.05);
+    border-right: 1px solid rgba(255,255,255,0.05);
+    background: linear-gradient(to top, rgba(164, 230, 255, 0.05), transparent);
+}
+
+.glow-cyan { box-shadow: 0 0 20px rgba(76, 214, 255, 0.4); }
+.glow-purple { box-shadow: 0 0 20px rgba(220, 184, 255, 0.4); }
+
+/* Animación de golpe en los tambores */
+.drum-pad {
+    transition: all 0.05s ease-out; /* Súper rápido para que se sienta responsivo */
+}
+.drum-pad.active {
+    transform: scale(1.15) translateY(-10px);
+    filter: brightness(1.5);
+}
+.drum-pad.active-kick { box-shadow: 0 0 40px var(--tertiary); border-color: var(--tertiary); }
+.drum-pad.active-snare { box-shadow: 0 0 40px var(--secondary); border-color: var(--secondary); }
+.drum-pad.active-hihat { box-shadow: 0 0 40px var(--primary); border-color: var(--primary); }
+
+/* Lógica de navegación colapsable */
+.side-nav {
+    transition: transform 0.3s ease-in-out;
+}
+.side-nav.collapsed {
+    transform: translateX(-100%);
+}
+.practice-arena {
+    transition: all 0.3s ease-in-out;
+}
+.practice-arena.expanded {
+    left: 0 !important;
+    width: 100vw !important;
 }
