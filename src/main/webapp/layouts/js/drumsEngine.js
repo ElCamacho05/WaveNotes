@@ -147,21 +147,21 @@ function testLoop() {
 
     analyser.getByteFrequencyData(dataArray);
 
-    // vease drums.py para las frecuencias definidas
-    let e_kick = getBandEnergy(20, 60);
-    let e_floor_tom = getBandEnergy(61, 120);
-    let e_snare = getBandEnergy(121, 250);
-    let e_high_tom = getBandEnergy(251, 1500);
-    let e_hihat = getBandEnergy(4000, 8000);
-    let e_crash = getBandEnergy(8001, 12000);
+    // multiplicadores para compensar la perdida natural de energia en agudos
+    let e_kick = getBandEnergy(20, 60) * 1.0;
+    let e_floor_tom = getBandEnergy(61, 120) * 1.0;
+    let e_snare = getBandEnergy(121, 250) * 1.1;
+    let e_high_tom = getBandEnergy(251, 1500) * 1.2;
+    let e_hihat = getBandEnergy(4000, 8000) * 1.4;
+    let e_crash = getBandEnergy(8001, 12000) * 1.5;
 
     let totalEnergy = e_kick + e_floor_tom + e_snare + e_high_tom + e_hihat + e_crash;
     let now = Date.now();
+    let energyDelta = totalEnergy - previousTestEnergy;
 
-    let energyDelta = totalEnergy - previousGameEnergy;
-
-    if (totalEnergy > 300 && energyDelta > 150) {
-        if (now - lastTestHitTime > 150) {
+    // delta mas permisivo (100) pero cooldown estricto (120ms)
+    if (totalEnergy > 300 && energyDelta > 100) {
+        if (now - lastTestHitTime > 120) {
             let energies = {
                 0: e_kick, 1: e_snare, 2: e_hihat,
                 3: e_high_tom, 4: e_floor_tom, 5: e_crash
@@ -169,15 +169,11 @@ function testLoop() {
             let winnerStr = Object.keys(energies).reduce((a, b) => energies[a] > energies[b] ? a : b);
             let winnerDrum = parseInt(winnerStr);
 
-            if (energies[winnerDrum] > 100) {
-                detectedDrum = winnerDrum;
+            if (energies[winnerDrum] > 80) {
+                let detectedDrum = winnerDrum;
                 lightUpDrum(detectedDrum);
-                lastGameHitTime = now;
-                
-                console.log(`[HIT REAL] Tambor: ${detectedDrum} | Delta: ${energyDelta.toFixed(1)} | Pts Tambor: ${energies[winnerDrum].toFixed(1)}`);
-            }
-            else {
-                console.log(`[HIT TENTATIVO / RUIDO] Tambor: ${detectedDrum} | Delta: ${energyDelta.toFixed(1)} | Pts Tambor: ${energies[winnerDrum].toFixed(1)}`);
+                lastTestHitTime = now;
+                console.log(`[hit test] tambor: ${detectedDrum} | delta: ${energyDelta.toFixed(1)}`);
             }
         }
     }
@@ -286,24 +282,25 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const currentTime = audio.currentTime;
 
-    // deteccion del microfono mediante FFT
+    // deteccion del microfono mediante fft
     let detectedDrum = -1;
     analyser.getByteFrequencyData(dataArray);
     
-    let e_kick = getBandEnergy(20, 60);
-    let e_floor_tom = getBandEnergy(61, 120);
-    let e_snare = getBandEnergy(121, 250);
-    let e_high_tom = getBandEnergy(251, 1500);
-    let e_hihat = getBandEnergy(4000, 8000);
-    let e_crash = getBandEnergy(8001, 12000);
+    // ecualizacion de frecuencias
+    let e_kick = getBandEnergy(20, 60) * 1.0;
+    let e_floor_tom = getBandEnergy(61, 120) * 1.0;
+    let e_snare = getBandEnergy(121, 250) * 1.1;
+    let e_high_tom = getBandEnergy(251, 1500) * 1.2;
+    let e_hihat = getBandEnergy(4000, 8000) * 1.4;
+    let e_crash = getBandEnergy(8001, 12000) * 1.5;
 
     let totalEnergy = e_kick + e_floor_tom + e_snare + e_high_tom + e_hihat + e_crash;
     const now = Date.now();
-
     let energyDelta = totalEnergy - previousGameEnergy;
 
-    if (totalEnergy > 300 && energyDelta > 150) {
-        if (now - lastGameHitTime > 50) {
+    // control de impacto
+    if (totalEnergy > 300 && energyDelta > 100) {
+        if (now - lastGameHitTime > 120) {
             let energies = {
                 0: e_kick, 1: e_snare, 2: e_hihat,
                 3: e_high_tom, 4: e_floor_tom, 5: e_crash
@@ -311,12 +308,11 @@ function gameLoop() {
             let winnerStr = Object.keys(energies).reduce((a, b) => energies[a] > energies[b] ? a : b);
             let winnerDrum = parseInt(winnerStr);
 
-            if (energies[winnerDrum] > 100) {
+            if (energies[winnerDrum] > 80) {
                 detectedDrum = winnerDrum;
                 lightUpDrum(detectedDrum);
                 lastGameHitTime = now;
-                
-                console.log(`[HIT REAL] Tambor: ${detectedDrum} | Delta: ${energyDelta.toFixed(1)} | Pts Tambor: ${energies[winnerDrum].toFixed(1)}`);
+                console.log("[hit juego] tambor: ${detectedDrum} | delta: ${energyDelta.toFixed(1)}");
             }
         }
     }
