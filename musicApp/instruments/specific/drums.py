@@ -49,12 +49,12 @@ async def extract_drums(request: Request):
         for i, frame in enumerate(beat_frames):
             ie = S[:, frame]
             
-            e_kick      = np.sum(ie[band_kick])
-            e_floor_tom = np.sum(ie[band_floor_tom])
-            e_snare     = np.sum(ie[band_snare])
-            e_high_tom  = np.sum(ie[band_high_tom])
-            e_hihat     = np.sum(ie[band_hihat])
-            e_crash     = np.sum(ie[band_crash])
+            e_kick = np.mean(ie[band_kick]) if np.any(band_kick) else 0
+            e_floor_tom = np.mean(ie[band_floor_tom]) if np.any(band_floor_tom) else 0
+            e_snare = np.mean(ie[band_snare]) if np.any(band_snare) else 0
+            e_high_tom = np.mean(ie[band_high_tom]) if np.any(band_high_tom) else 0
+            e_hihat = np.mean(ie[band_hihat]) if np.any(band_hihat) else 0
+            e_crash = np.mean(ie[band_crash]) if np.any(band_crash) else 0
             
             e = {
                 0: e_kick,       # 0 = KICK
