@@ -45,7 +45,7 @@ function loginGoogle(e) {
         }).then(response => {
             if (response.ok) {
                 const urlParams = new URLSearchParams(window.location.search);
-                const destination = urlParams.get('redirect') || 'createPractice.jsp';
+                const destination = urlParams.get('redirect') ?? 'welcome.jsp';
 
                 window.location.href = contextPath + "/" + destination;
                 
@@ -109,7 +109,7 @@ function loginEmail(e) {
         }).then(response => {
             if (response.ok) {
                 const urlParams = new URLSearchParams(window.location.search);
-                const destination = urlParams.get('redirect') || 'createPractice.jsp';
+                const destination = urlParams.get('redirect') ?? 'welcome.jsp';
 
                 window.location.href = contextPath + "/" + destination;
                 
