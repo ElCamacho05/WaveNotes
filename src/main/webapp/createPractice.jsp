@@ -32,7 +32,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
     <link rel="stylesheet" href="styles/practice.css">
 </head>
 
-<body data-pistas="<%= pistasListas %>">
+<body data-pistas="<%= pistasListas %>" data-context="<%=request.getContextPath()%>">
     <%@ include file="includes/header.jsp" %>
 
     <%@ include file="includes/sideNavigation.jsp" %>
@@ -165,6 +165,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
     <script type="module" src="<%=request.getContextPath()%>/loginModule.js"></script>
 
     <script>
+        const contextPath = document.body.getAttribute('data-context') ?? '/WaveNotes';
 
         const finishedTracks = document.body.getAttribute('data-pistas') === 'true';
         
@@ -292,7 +293,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             playerTitle.innerText = "PISTA: " + trackName.replace('.mp3', '').toUpperCase();
 
             // Cargar y reproducir
-            const url = '/WaveNotes/stream?track=' + trackName;
+            const url = contextPath + '/stream?track=' + trackName;
             currentAudio = new Audio(url);
             
             // Sincronizar el slider de volumen actual con el audio nuevo

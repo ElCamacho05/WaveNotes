@@ -116,7 +116,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         var haveAccount = true;
 
         function setHaveAccount(state) {
-            const contextPath = document.body.getAttribute('data-context') || '/WaveNotes';
+            const contextPath = document.body.getAttribute('data-context') ?? '/WaveNotes';
             
             if (state) {
                 window.location.href = contextPath + "/login.jsp";
