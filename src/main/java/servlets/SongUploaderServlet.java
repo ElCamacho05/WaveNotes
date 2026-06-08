@@ -52,8 +52,13 @@ public class SongUploaderServlet extends HttpServlet{
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
             
+            String pythonApiUrl = System.getenv("PYTHON_API_URL");
+            if (pythonApiUrl == null || pythonApiUrl.isEmpty()) {
+                pythonApiUrl = "http://127.0.0.1:8000";
+            }
+
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://127.0.0.1:8000/wn/separator"))
+                .uri(URI.create(pythonApiUrl + "/wn/separator"))
                 .header("Content-Type", "audio/mpeg")
                 .POST(HttpRequest.BodyPublishers.ofByteArray(fileBytes))
                 .build();

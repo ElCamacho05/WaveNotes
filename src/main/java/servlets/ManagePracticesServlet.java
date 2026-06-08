@@ -101,13 +101,19 @@ public class ManagePracticesServlet extends HttpServlet {
 
             // extraccion de notas mediante Endpoint de python
             System.out.println("-- (PracticesServlet) Solicitando extraccion de notas a Python para: " + songInstrument);
+
+            String pythonApiUrl = System.getenv("PYTHON_API_URL");
+            if (pythonApiUrl == null || pythonApiUrl.isEmpty()) {
+                pythonApiUrl = "http://127.0.0.1:8000";
+            }
+
             URI uri;
             switch (songInstrument) {
-                case "drums": uri = new URI("http://127.0.0.1:8000/wn/drums"); break;
-                case "bass":  uri = new URI("http://127.0.0.1:8000/wn/bass"); break;
+                case "drums": uri = new URI(pythonApiUrl + "/wn/drums"); break;
+                case "bass":  uri = new URI(pythonApiUrl + "/wn/bass"); break;
                 case "other": 
-                case "guitar":uri = new URI("http://127.0.0.1:8000/wn/guitar"); break;
-                default:      uri = new URI("http://127.0.0.1:8000/wn/pitch"); break;
+                case "guitar":uri = new URI(pythonApiUrl + "/wn/guitar"); break;
+                default:      uri = new URI(pythonApiUrl + "/wn/pitch"); break;
             }
 
             HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
