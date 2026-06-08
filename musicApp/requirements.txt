@@ -5,7 +5,7 @@ python-multipart==0.0.27
 librosa==0.11.0
 numpy==1.26.4
 soundfile==0.13.1
-torch==2.12.0 --index-url https://download.pytorch.org/whl/cpu
-torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cpu
+torch==2.0.1 --index-url https://download.pytorch.org/whl/cpu
+torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cpu
 demucs @ git+https://github.com/facebookresearch/demucs@e976d93ecc3865e5757426930257e200846a520a
 requests==2.33.1
