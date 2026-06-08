@@ -3,13 +3,15 @@ import trackSeparator
 from instruments.common import pitchExtractor
 from instruments.specific import guitar
 from instruments.specific import drums
-import musicDownloader
+# import musicDownloader
 
 # FastAPI
 from fastapi import FastAPI, Request, UploadFile, Response, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, validator
 
+# otros
+import time
 
 app = FastAPI()
 
@@ -47,7 +49,9 @@ async def pitchEndpoint(request: Request):
 @app.post("/wn/separator")
 async def separateEndpoint(request: Request):
     print("-- (server) Separando pistas...")
+    start = time.time()
     result = await trackSeparator.separate(request)
+    print(f"-- (server) Pistas separadas en {round(time.time() - start, 2)} segundos")
 
     return Response(
             content=result['content'],
