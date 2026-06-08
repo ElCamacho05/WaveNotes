@@ -36,7 +36,7 @@ function loginGoogle(e) {
         params.append('email', user.email);
         params.append('name', user.displayName);
         
-        const contextPath = document.body.getAttribute('data-context') || '/WaveNotes';
+        const contextPath = document.body.getAttribute('data-context') ?? '/WaveNotes';
         
         fetch(contextPath + '/login', {
             method: 'POST',
@@ -100,7 +100,7 @@ function loginEmail(e) {
         params.append('email', user.email);
         params.append('name', user.displayName);
         
-        const contextPath = document.body.getAttribute('data-context') || '/WaveNotes';
+        const contextPath = document.body.getAttribute('data-context') ?? '/WaveNotes';
         
         fetch(contextPath + '/login', {
             method: 'POST',
@@ -157,7 +157,7 @@ function registerEmail(e) {
         params.append('email', user.email);
         params.append('name', user.email.split('@')[0]);
 
-        const contextPath = document.body.getAttribute('data-context') || '/WaveNotes';
+        const contextPath = document.body.getAttribute('data-context') ?? '/WaveNotes';
         
         fetch(contextPath + '/login', {
             method: 'POST',
@@ -166,7 +166,7 @@ function registerEmail(e) {
         }).then(response => {
             if (response.ok) {
                 const urlParams = new URLSearchParams(window.location.search);
-                const destination = urlParams.get('redirect') || 'createPractice.jsp';
+                const destination = urlParams.get('redirect') ?? 'createPractice.jsp';
 
                 window.location.href = contextPath + "/" + destination;
                 
@@ -198,7 +198,7 @@ function registerEmail(e) {
 function logOut() {
     console.log("intentando cerrar sesion...");
     const auth = getAuth();
-    const contextPath = document.body.getAttribute('data-context') || '/WaveNotes';
+    const contextPath = document.body.getAttribute('data-context') ?? '/WaveNotes';
 
     signOut(auth).then(() => {
         console.log("Sesion en Firebase cerrada correctamente");
