@@ -70,7 +70,15 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 <span class="material-symbols-outlined text-gradient-brand" style="font-size: 64px;">check_circle</span>
                 <h3 class="heading-lg" style="font-size: 24px; margin-top: var(--spacing-sm);">¡Sesión Lista!</h3>
                 <p class="text-muted">Las pistas se han separado y guardado en memoria de la aplicación.</p>
-                <button onclick="location.reload()" class="btn" style="border: 1px solid var(--outline); margin-top: var(--spacing-md); width: auto; margin-inline: auto;">¿Te equivocaste? Sube otra canción</button>
+                
+                <form id="songUploadFormReintentar" action="<%=request.getContextPath()%>/separator" method="POST" enctype="multipart/form-data">
+                    <label style="cursor: pointer; display: inline-block; margin-top: var(--spacing-md);">
+                        <input name="audio" accept=".mp3,.wav" type="file" style="display: none;" onchange="startReUpload()"/>
+                        <span class="btn" style="border: 1px solid var(--outline); width: auto; padding: 10px 24px;">
+                            ¿Te equivocaste? Sube otra canción
+                        </span>
+                    </label>
+                </form>
             </div>
 
         </div>
@@ -197,6 +205,12 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             document.getElementById('uploadUI').style.display = 'none';
             document.getElementById('loadingUI').style.display = 'block';
             document.getElementById('songUploadForm').submit();
+        }
+
+        function startReUpload() {
+            document.getElementById('successUI').classList.add('hidden');
+            document.getElementById('loadingUI').style.display = 'block';
+            document.getElementById('songUploadFormReintentar').submit();
         }
 
         // variables de reproduccion
