@@ -26,62 +26,58 @@ for i, root in enumerate(NOTAS):
 
 async def extract_chords(request: Request):
     audio_bytes = await request.body()
-    print(f"-- (extract_pitch) Tamanio del paquete: {len(audio_bytes)} bytes")
+    print(f"-- (extract_chords) Tamanio del paquete: {len(audio_bytes)} bytes")
     
-    # condicion por si se envian audios invalidos
     if len(audio_bytes) < 1000:
         raise HTTPException(status_code=400, detail="Error: Archivo vacio o corrupto")
-    else:
-        print("-- (extract_pitch) Archivo leido correctamente")
 
-    # guardado temporal en directorio en ram de linux (cosas de linux)
-    # NOTA: se recibe el audio de java (extraido por separate_in_memory) como .wav
     with tempfile.NamedTemporaryFile(dir="/tmp", delete=False, suffix=".wav") as temp_audio:
         temp_audio.write(audio_bytes)
         temp_path = temp_audio.name
 
     try:
         print("-- (extract_chords) Cargando pista en librosa...")
-        y, sr = librosa.load(temp_path, sr=22050)
+        y, sr = librosa.load(temp_path, sr=None)
+
+        beat_frames = librosa.onset.onset_detect(y=y, sr=sr, units='frames')
+        beat_times = librosa.frames_to_time(beat_frames, sr=sr)
 
         # extraccion fel Cromagrama
-        chroma = librosa.feature.chroma_cqt(y=y, sr=sr)
+        chroma = librosa.feature.chroma_stft(y=y, sr=sr)
         
-        time_frames = chroma.shape[1]
-        detected_chors = []
-        
-        # analisis por segmentos de 20 frames musicales
-        for i in range(0, time_frames, 20):  
-            segmento = chroma[:, i:i+20]
-            e_mean = np.mean(segmento, axis=1)
+        clasif = []
+
+        # analisis continuo en rangos de 10 frames
+        for i, frame in enumerate(beat_frames):
+            end_frame = min(frame + 10, chroma.shape[1])
+            chroma_window = chroma[:, frame:end_frame]
             
-            norm = np.linalg.norm(e_mean) # normalizacion
+            # promedio de esa fraccion de segundo
+            e_mean = np.mean(chroma_window, axis=1)
+            
+            norm = np.linalg.norm(e_mean)
             if norm > 0:
                 e_mean = e_mean / norm
             
             best_chord_match = None
             max_score = -1
             
-            # comparacion del audio contra los 24 acordes
             for chord_name, template in CHORD_TEMPLATES.items():
-                # producto punto necesaroio para la comparacion
-                # mientras mas alto sea el score mas cerca esta de ser igual a ese acorde
                 score = np.dot(e_mean, template)
                 if score > max_score:
                     max_score = score
                     best_chord_match = chord_name
             
-            # filtrado de ruido, por si se colo por ahi algun ruido de fondo
-            # que se haya tomado como maximo aunque no lo sea
-            # falso positivo
             if max_score > 0.4: 
-                # evitar acordes repetidos en la misma ventana
-                if len(detected_chors) == 0 or detected_chors[-1] != best_chord_match:
-                    detected_chors.append(best_chord_match)
+                rt_seconds = float(beat_times[i])
+                clasif.append({
+                    "chord": best_chord_match, 
+                    "time": rt_seconds
+                })
 
-        print(f"!! (extract_chords) Extraccion completada: {len(detected_chors)} acordes encontrados")
+        print(f"!! (extract_chords) Extraccion completada: {len(clasif)} acordes encontrados")
         
-        return {"status": "success", "notas": detected_chors}
+        return {"status": "success", "notas": clasif}
 
     except Exception as e:
         print(f"Error extrayendo acordes: {e}")

@@ -37,28 +37,30 @@ async def extract_pitch(request: Request):
 
         # extraccion de matriz de frecuencias
         print("-- (extract_pitch) Ejecutando piptrack...")
-        pitches, mags = librosa.piptrack(y=y, sr=sr)
+        pitches, mags = librosa.piptrack(y=y, sr=sr, fmin=40.0, fmax=400.0)
 
         final_notes = []
 
         # conversion de cada magnitud a notas musicales como str para cada instante de tiempo 
         for t in range(mags.shape[1]):
-            # Se obtiene la posicion con la mayor frecuencia en ese tiempo, es la mas representativa
+            # Se obtiene la posicion con la mayor magnitud en ese tiempo, es la mas representativa
             index = mags[:, t].argmax()
             pitch_hz = pitches[index, t]
-
-            if pitch_hz > 0:
-                # Conversion de hz -> a Nota ("A4")
+            
+            # filtro para tomar la nota si tiene suficiente magnitud
+            # para no  registrar el silencio continuo como ruido
+            if pitch_hz > 0 and mags[index, t] > 0.5:
                 note = librosa.hz_to_note(pitch_hz)
                 
-                if len(final_notes) == 0 or final_notes[-1] != note: # solo si es distinta a la ultima
-                    final_notes.append((note, t))
+                rt_seconds = float(librosa.frames_to_time(t, sr=sr))
+                
+                # solo se guarda si se pasa un tiempo, por que sino se repite innecesariamente
+                if len(final_notes) == 0 or final_notes[-1]["note"] != note:
+                    final_notes.append({"note": note, "time": rt_seconds})
 
         print(f"// (extract_pitch) Extraccion completada: {len(final_notes)} notas encontradas")
         
-        response = {"status": "success", "notas": final_notes}
-
-        return response
+        return {"status": "success", "notas": final_notes}
 
     except Exception as e:
         print(f"Error extrayendo notas: {e}")
