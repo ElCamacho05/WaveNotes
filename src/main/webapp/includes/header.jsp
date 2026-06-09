@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 <nav class="top-nav" style="justify-content: space-between; padding: 0 32px;">
     <div style="display: flex; align-items: center; gap: 32px;">
-        <img src="/src/main/resources/logo.png">
+        <img src="logo.png" style="height: 40px; width: auto; object-fit: contain;">
         <span class="heading-lg text-gradient-brand" style="font-size: 24px;">WaveNotes</span>
     </div>
     
@@ -13,7 +13,10 @@
             <!-- <span class="text-muted" style="margin-right: 8px;">Hola, <%= session.getAttribute("userName") %></span> -->
             <span class="text-muted" style="margin-right: 8px;">Hola, ${user.nameUser}</span>
             <a href="<%=request.getContextPath()%>/practices" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Comenzar</a>
+            <a id="btn-logout-header" class="btn btn-login" style="width: auto; padding: 8px 24px; font-size: 16px; border-radius: 99px;">Salir</a>
         <%} %>
 
     </div>
+
+    <script type="module" src="<%=request.getContextPath()%>/loginModule.js"></script>
 </nav>

@@ -254,3 +254,8 @@ const btnLogOut = document.getElementById('btn-logout');
 if (btnLogOut) {
     btnLogOut.addEventListener('click', logOut);
 }
+
+const btnLogOutHeader = document.getElementById('btn-logout-header');
+if (btnLogOutHeader) {
+    btnLogOutHeader.addEventListener('click', logOut);
+}
