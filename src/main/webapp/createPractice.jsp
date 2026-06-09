@@ -32,7 +32,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
     <link rel="stylesheet" href="styles/practice.css">
 </head>
 
-<body data-pistas="<%= pistasListas %>" data-context="<%=request.getContextPath()%>">
+<body data-pistas="<%= pistasListas %>" data-context="<%=request.getContextPath()%>" >
     <%@ include file="includes/header.jsp" %>
 
     <%@ include file="includes/sideNavigation.jsp" %>
@@ -51,7 +51,8 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 </div>
                 <h3 class="heading-lg" style="font-size: 24px; margin-bottom: var(--spacing-base);">Arrastra y suelta tu archivo de audio MP3 o WAV.</h3>
                 
-                    <form id="songUploadForm" action="<%=request.getContextPath()%>/separator" method="POST" enctype="multipart/form-data">                    <label style="cursor: pointer;">
+                    <form id="songUploadForm" action="<%=request.getContextPath()%>/separator" method="POST" enctype="multipart/form-data">
+                    <label style="cursor: pointer;">
                         <input name="audio" accept=".mp3,.wav" type="file" style="display: none;" onchange="startUpload()"/>
                         <span class="btn btn-login" style="width: auto; padding: var(--spacing-sm) var(--spacing-md); font-size: 16px; border-radius: 99px;">
                             <span class="material-symbols-outlined">cloud_upload</span> Cargar canción
@@ -157,9 +158,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             </button>
             <div class="player-progress">
                 <span id="player-time-current" class="time-text">0:00</span>
-                <div class="progress-bar-container" id="player-progress-container">
-                    <div class="progress-fill" id="player-progress-fill"></div>
-                </div>
+                <input type="range" id="seek-bar" class="player-seek-bar" min="0" max="100" value="0" step="0.1" style="margin: 0 12px;">
                 <span id="player-time-total" class="time-text">0:00</span>
             </div>
         </div>
@@ -220,27 +219,25 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 
         const globalPlayer = document.getElementById('global-player');
         const mainContent = document.querySelector('.app-content');
+        const sideNav = document.querySelector('.side-nav');
+        
         const playerTitle = document.getElementById('player-title');
         const playerPlayBtn = document.getElementById('player-play-btn');
         const playerPlayIcon = document.getElementById('player-play-icon');
-        const playerProgressFill = document.getElementById('player-progress-fill');
         const playerTimeCurrent = document.getElementById('player-time-current');
         const playerTimeTotal = document.getElementById('player-time-total');
-        const progressContainer = document.getElementById('player-progress-container');
+        
+        const seekBar = document.getElementById('seek-bar');
         const volumeSlider = document.getElementById('player-volume-slider');
 
-        globalPlayer.classList.add('visible');
-        mainContent.classList.add('player-active');
-
-        // Formato matemático para segundos a mm:ss
         function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
+            if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
             const m = Math.floor(seconds / 60);
             const s = Math.floor(seconds % 60);
             return m + ":" + (s < 10 ? "0" : "") + s;
         }
 
-        // Play/Pause desde el Reproductor Global
+        // play / pause global
         playerPlayBtn.addEventListener('click', () => {
             if (!currentAudio) return;
             const iconSpan = currentButton.querySelector('.material-symbols-outlined');
@@ -261,19 +258,25 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             if (currentAudio) currentAudio.volume = e.target.value;
         });
 
-        // Adelantar/Atrasar canción al dar clic en la barra
-        progressContainer.addEventListener('click', (e) => {
-            if (!currentAudio) return;
-            const rect = progressContainer.getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            currentAudio.currentTime = pos * currentAudio.duration;
+        let isSeeking = false;
+
+        // evento para cambiar el tiempo en la barra
+        seekBar.addEventListener('input', () => {
+            isSeeking = true; 
+            playerTimeCurrent.innerText = formatTime(seekBar.value);
         });
 
-        // Función Principal del botón en las listas (Bento Box)
+        // evento para ya cambiar el momento actual del audio
+        seekBar.addEventListener('change', () => {
+            if (currentAudio) {
+                currentAudio.currentTime = parseFloat(seekBar.value);
+            }
+            isSeeking = false;
+        });
+
         function playPreview(trackName, btnElement) {
             const iconSpan = btnElement.querySelector('.material-symbols-outlined');
 
-            // Si es la misma canción, solo pausar/reproducir
             if (currentTrackName === trackName) {
                 if (currentAudio.paused) {
                     currentAudio.play();
@@ -287,7 +290,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                 return;
             }
 
-            // Si hay otra canción sonando, la matamos
+            // eliminar la cancion que sonaba anteriormente
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
@@ -299,32 +302,39 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             currentTrackName = trackName;
             currentButton = btnElement;
 
-            // Mostrar el reproductor global deslizándolo hacia arriba
+            // mostrar el reproductor global
             globalPlayer.classList.add('visible');
             mainContent.classList.add('player-active');
             
-            // Actualizar el título del reproductor (quitamos el .mp3)
+            // si el sidenav esta activo, se pone un padding para que se vea el logout
+            if(sideNav) {
+                sideNav.style.paddingBottom = '96px';
+            }
+            
             playerTitle.innerText = "PISTA: " + trackName.replace('.mp3', '').toUpperCase();
 
-            // Cargar y reproducir
+            // cargar y reproducir cancion
             const url = contextPath + '/stream?track=' + trackName;
             currentAudio = new Audio(url);
             
-            // Sincronizar el slider de volumen actual con el audio nuevo
             currentAudio.volume = volumeSlider.value;
 
-            // Actualizar interfaz en tiempo real
-            currentAudio.ontimeupdate = () => {
-                playerTimeCurrent.innerText = formatTime(currentAudio.currentTime);
+            currentAudio.onloadedmetadata = () => {
+                seekBar.max = currentAudio.duration;
                 playerTimeTotal.innerText = formatTime(currentAudio.duration);
-                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
-                playerProgressFill.style.width = percent + '%';
+            };
+
+            currentAudio.ontimeupdate = () => {
+                if (!isSeeking) {
+                    playerTimeCurrent.innerText = formatTime(currentAudio.currentTime);
+                    seekBar.value = currentAudio.currentTime;
+                }
             };
 
             currentAudio.onended = function() {
                 iconSpan.innerText = 'play_circle';
                 playerPlayIcon.innerText = 'play_arrow';
-                playerProgressFill.style.width = '0%';
+                seekBar.value = 0;
                 playerTimeCurrent.innerText = "0:00";
             };
 
