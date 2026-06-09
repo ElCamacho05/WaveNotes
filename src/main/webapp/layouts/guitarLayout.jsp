@@ -1,24 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<div class="guitar-game-container" style="width: 100%; height: 100%; position: relative;">
-    
-    <div style="position: absolute; top: 20px; left: 20px; z-index: 10; display: flex; gap: 20px;">
-        <div class="glass-panel" style="padding: 10px 20px; font-weight: bold; color: var(--primary);">
-            Score: <span id="scoreDisplay">0</span>
+
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/styles/guitar.css">
+
+    <div class="guitar-game-container">
+
+        <div class="glass-panel">
+            <h3 class="glass-panel-title">
+                <span class="material-symbols-outlined">queue_music</span> Info Práctica
+            </h3>
+
+            <div class="guitar-stats-grid">
+                <div>
+                    <p class="text-small text-muted" style="text-transform: uppercase;">Score</p>
+                    <p class="guitar-score-display" id="scoreDisplay">0</p>
+                </div>
+                <div>
+                    <p class="text-small text-muted" style="text-transform: uppercase;">Accuracy</p>
+                    <p class="guitar-accuracy-display" id="accuracyDisplay">100%</p>
+                </div>
+            </div>
+
+            <div class="guitar-btn-container">
+                <button id="btnStartEngine" class="btn btn-login guitar-btn-start">Conectar Guitarra</button>
+            </div>
         </div>
-        <button id="btnStartEngine" class="btn btn-login">Iniciar Micrófono y Tocar</button>
+
+        <div class="perspective-view">
+            <canvas id="guitarHighway" class="highway-track"></canvas>
+
+            <div class="guitar-hit-zone-glow"></div>
+            <div class="guitar-hit-zone-line"></div>
+        </div>
+
+        <div id="guitar-pads-container" class="guitar-pads-container">
+            </div>
     </div>
 
-    <canvas id="noteHighway" style="width: 100%; height: 100%; display: block;"></canvas>
-
-    <div class="hit-zone" style="
-        position: absolute; 
-        bottom: 10%; 
-        left: 0; 
-        width: 100%; 
-        height: 60px; 
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        border-top: 2px solid var(--primary);
-        border-bottom: 2px solid var(--primary);
-        pointer-events: none;">
-    </div>
-</div>
+    <script src="<%=request.getContextPath()%>/layouts/js/guitarEngine.js" defer></script>

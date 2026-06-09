@@ -263,6 +263,9 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
         // evento para cambiar el tiempo en la barra
         seekBar.addEventListener('input', () => {
             isSeeking = true; 
+            if (currentAudio) {
+                currentAudio.currentTime = seekBar.value;
+            }
             playerTimeCurrent.innerText = formatTime(seekBar.value);
         });
 
@@ -271,7 +274,6 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             if (currentAudio) {
                 currentAudio.currentTime = parseFloat(seekBar.value);
             }
-            isSeeking = false;
         });
 
         function playPreview(trackName, btnElement) {
@@ -317,6 +319,7 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
             const url = contextPath + '/stream?track=' + trackName;
             currentAudio = new Audio(url);
             
+            currentAudio.preload = 'auto'; 
             currentAudio.volume = volumeSlider.value;
 
             currentAudio.onloadedmetadata = () => {
@@ -329,6 +332,10 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
                     playerTimeCurrent.innerText = formatTime(currentAudio.currentTime);
                     seekBar.value = currentAudio.currentTime;
                 }
+            };
+
+            currentAudio.onseeked = () => {
+                isSeeking = false;
             };
 
             currentAudio.onended = function() {

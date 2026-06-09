@@ -237,7 +237,7 @@ seekBar.addEventListener('input', () => {
 
 btnPlayPause.addEventListener('click', () => {
     if (!isPlaying) {
-        alert("¡Presiona 'Iniciar Mic' primero para conectar tu batería!");
+        alert("Presiona 'Iniciar Mic' primero para conectar tu batería.");
         return;
     }
     if (audio.paused) {
@@ -265,7 +265,7 @@ async function startMicEngine() {
         }
     } catch (playError) {
         console.error(playError);
-        alert("Asegúrate de que la canción exista en la base de datos.");
+        alert("Error: La cancion no parece existir en la base de datos");
         btnStart.style.display = 'block';
     }
 }
