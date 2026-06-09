@@ -112,15 +112,15 @@
 }
 
 .drums-pads-container {
-    height: 160px;
+    height: 240px;
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    padding-bottom: 20px;
+    padding-bottom: 100px;
     padding-left: 16px;
     padding-right: 16px;
     z-index: 20;
-    background: linear-gradient(to top, rgba(10, 10, 11, 0.95), transparent);
+    background: linear-gradient(to top, rgba(10, 10, 11, 0.98) 40%, transparent);
 }
 
 /* Estructura general de cada Pad */

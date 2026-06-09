@@ -39,16 +39,20 @@ modificado severamente por mi para cumplir completamente con mis espectativas y 
 
         <audio id="gameAudio" src="${actualPractice.song.urlAudio}" preload="auto"></audio>
 
-        <div id="player-bar" class="glass-panel player-bar">
-            
-            <button id="btnPlayPause" class="btn-icon player-btn-play">
-                <span class="material-symbols-outlined player-icon" id="iconPlayPause">play_arrow</span>
+        <div id="player-bar" class="player-bar">
+            <button id="btnPlayPause" class="ctrl-btn main-ctrl" style="flex-shrink: 0;">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" id="iconPlayPause">play_arrow</span>
             </button>
             
-            <input type="range" id="seek-bar" class="player-seek-bar" min="0" max="100" value="0" step="0.1">
+            <div class="player-progress" style="flex-grow: 1; padding: 0 16px;">
+                <span id="player-time-current" class="time-text">0:00</span>
                 
-            <span id="time-display" class="player-time-display">0:00</span>
-
+                <input type="range" id="seek-bar" class="player-seek-bar" min="0" max="100" value="0" step="0.1" style="width: 100%;">
+                
+                <span id="player-time-total" class="time-text">0:00</span>
+            </div>
+            
+            <div style="width: 32px; flex-shrink: 0;"></div>
         </div>
 
         <c:choose>
